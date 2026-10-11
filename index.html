@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#b3141f">
+  <!-- SHARE:START -->
+  <title>Rafi &amp; Nabila are getting married</title>
+  <meta name="description" content="You are warmly invited. Tap to open your invitation.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Rafi &amp; Nabila are getting married">
+  <meta property="og:description" content="You are warmly invited. Tap to open your invitation.">
+  <meta property="og:image" content="assets/img/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <!-- SHARE:END -->
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/pinyon-script.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/cormorant-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="locked">
+  <!-- Opening: hero with the theatre curtains -->
+  <header class="hero" id="hero">
+    <div class="hero-inner" id="heroInner"></div>
+    <canvas class="curtains" id="curtains" aria-hidden="true"></canvas>
+    <button class="seal-wrap" id="openBtn" type="button" aria-label="Open the invitation">
+      <span class="guest-note" id="guestNote"></span>
+      <span class="seal" id="seal"></span>
+      <span class="tap-hint" id="tapHint"></span>
+    </button>
+  </header>
+
+  <main id="app" aria-live="polite"></main>
+
+  <button class="fab fab-lang" id="langBtn" type="button" aria-label="Change language" hidden></button>
+  <button class="fab fab-music" id="musicBtn" type="button" aria-label="Play or pause music" hidden></button>
+  <audio id="bgm" loop preload="none"></audio>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <noscript><p style="padding:2rem;text-align:center">Please turn on JavaScript to view this invitation.</p></noscript>
+
+  <script src="assets/js/shared.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>

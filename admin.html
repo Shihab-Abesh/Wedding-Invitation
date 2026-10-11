@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#7b1626">
+  <title>Invitation Editor</title>
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <img src="assets/img/icon.svg" alt="" width="34" height="34">
+      <div>
+        <b>Invitation Editor</b>
+        <span class="status" id="status"><i></i><span>Loading…</span></span>
+      </div>
+    </div>
+    <div class="top-actions">
+      <a class="btn ghost sm hide-xs" id="liveLink" target="_blank" rel="noopener">View site</a>
+      <button class="btn primary" id="publishBtn" type="button">Publish</button>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs" role="tablist">
+    <button type="button" data-tab="edit" class="on" role="tab">Edit</button>
+    <button type="button" data-tab="preview" class="tab-preview" role="tab">Preview</button>
+    <button type="button" data-tab="guests" role="tab">Guest links</button>
+    <button type="button" data-tab="setup" role="tab">Setup</button>
+  </nav>
+
+  <div class="banner" id="banner" hidden></div>
+
+  <main class="layout" id="layout" data-tab="edit">
+    <div class="col-left">
+      <section class="pane" id="pane-edit">
+        <div class="intro-card">
+          <b>Tap a section to edit it.</b>
+          <span>Changes show in the preview straight away. Press <b>Publish</b> when you're happy and everyone with the link sees the new version in about a minute.</span>
+        </div>
+        <div id="form"></div>
+      </section>
+      <section class="pane" id="pane-guests"></section>
+      <section class="pane" id="pane-setup"></section>
+    </div>
+    <section class="pane pane-preview" id="pane-preview">
+      <div class="pv-bar">
+        <div class="seg" id="pvLang">
+          <button type="button" data-lang="en" class="on">EN</button>
+          <button type="button" data-lang="bn">বাং</button>
+        </div>
+        <button type="button" class="btn ghost sm" id="replayBtn">Replay opening</button>
+      </div>
+      <div class="phone-wrap" id="phoneWrap">
+        <div class="phone" id="phone"><iframe id="pv" src="index.html?preview=1" title="Live preview"></iframe></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="modal" id="modal" hidden><div class="modal-card" id="modalCard"></div></div>
+
+  <script src="assets/js/shared.js"></script>
+  <script src="assets/js/admin.js"></script>
+</body>
+</html>

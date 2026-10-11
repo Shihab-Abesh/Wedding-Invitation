@@ -1,0 +1,460 @@
+{
+  "settings": {
+    "defaultLanguage": "en",
+    "showLanguageSwitch": true,
+    "timezone": "+06:00",
+    "theme": "classic",
+    "colors": {
+      "curtain": "#b3141f",
+      "curtainLines": "#fdeee8",
+      "accent": "#7b1626",
+      "gold": "#c8a25c",
+      "background": "#fbf7f1",
+      "card": "#fffdf9",
+      "text": "#4f3b37",
+      "muted": "#8a7470",
+      "buttonText": "#fff8f0"
+    },
+    "music": {
+      "enabled": true,
+      "src": "assets/music/canon-in-d-musicbox.mp3",
+      "volume": 0.6
+    },
+    "sectionOrder": [
+      "reveal",
+      "countdown",
+      "families",
+      "photo",
+      "events",
+      "venue",
+      "menu",
+      "dressCode",
+      "gifts",
+      "rsvp",
+      "closing"
+    ]
+  },
+  "share": {
+    "title": "",
+    "description": "You are warmly invited. Tap to open your invitation.",
+    "image": "assets/img/og.jpg",
+    "siteUrl": ""
+  },
+  "couple": {
+    "name1": {
+      "en": "Rafi",
+      "bn": "রাফি"
+    },
+    "name2": {
+      "en": "Nabila",
+      "bn": "নাবিলা"
+    },
+    "joiner": {
+      "en": "&",
+      "bn": "ও"
+    },
+    "monogram": {
+      "en": "",
+      "bn": ""
+    }
+  },
+  "intro": {
+    "tapHint": {
+      "en": "Tap to open",
+      "bn": "খুলতে ট্যাপ করুন"
+    },
+    "guestGreeting": {
+      "en": "Dear {name}",
+      "bn": "প্রিয় {name}"
+    },
+    "youAreInvited": {
+      "en": "you are invited",
+      "bn": "আপনি আমন্ত্রিত"
+    }
+  },
+  "hero": {
+    "topLine": {
+      "en": "Together with their families",
+      "bn": "পরিবারের দোয়া ও আশীর্বাদে"
+    },
+    "invitation": {
+      "en": "invite you to celebrate their wedding and the beginning of their forever",
+      "bn": "তাদের বিয়ের আনন্দঘন মুহূর্তে আপনাকে সাদর আমন্ত্রণ জানাচ্ছে"
+    },
+    "scrollHint": {
+      "en": "Scroll",
+      "bn": "নিচে দেখুন"
+    }
+  },
+  "reveal": {
+    "show": true,
+    "title": {
+      "en": "Save the Date",
+      "bn": "তারিখটি মনে রাখুন"
+    },
+    "subtitle": {
+      "en": "Scratch to discover the date",
+      "bn": "তারিখ জানতে ঘষে দেখুন"
+    },
+    "after": {
+      "en": "We're getting married!",
+      "bn": "আমরা বিয়ে করছি!"
+    },
+    "revealAll": {
+      "en": "or tap here to reveal",
+      "bn": "অথবা এখানে ট্যাপ করুন"
+    }
+  },
+  "countdown": {
+    "show": true,
+    "title": {
+      "en": "Countdown",
+      "bn": "আর মাত্র"
+    },
+    "days": {
+      "en": "Days",
+      "bn": "দিন"
+    },
+    "hours": {
+      "en": "Hours",
+      "bn": "ঘণ্টা"
+    },
+    "minutes": {
+      "en": "Minutes",
+      "bn": "মিনিট"
+    },
+    "seconds": {
+      "en": "Seconds",
+      "bn": "সেকেন্ড"
+    },
+    "done": {
+      "en": "The celebration has begun!",
+      "bn": "উৎসব শুরু হয়ে গেছে!"
+    }
+  },
+  "families": {
+    "show": true,
+    "eyebrow": {
+      "en": "With the blessings of our families",
+      "bn": "পরিবারের দোয়া ও আশীর্বাদে"
+    },
+    "family1": {
+      "en": "son of\nMr. Abdur Rahman & Mrs. Salma Rahman",
+      "bn": "জনাব আব্দুর রহমান ও\nমিসেস সালমা রহমান-এর পুত্র"
+    },
+    "family2": {
+      "en": "daughter of\nMr. Kamal Hossain & Mrs. Ruma Hossain",
+      "bn": "জনাব কামাল হোসেন ও\nমিসেস রুমা হোসেন-এর কন্যা"
+    }
+  },
+  "photo": {
+    "show": false,
+    "title": {
+      "en": "Our Moment",
+      "bn": "আমাদের মুহূর্ত"
+    },
+    "image": "",
+    "caption": {
+      "en": "",
+      "bn": ""
+    }
+  },
+  "events": {
+    "show": true,
+    "eyebrow": {
+      "en": "Join us for",
+      "bn": "আমাদের আয়োজন"
+    },
+    "title": {
+      "en": "The Celebrations",
+      "bn": "অনুষ্ঠানসূচি"
+    },
+    "showIllustration": true,
+    "items": [
+      {
+        "main": false,
+        "name": {
+          "en": "Gaye Holud",
+          "bn": "গায়ে হলুদ"
+        },
+        "date": "2026-12-17",
+        "time": "16:00",
+        "venue": {
+          "en": "Rooftop Garden, Dhanmondi",
+          "bn": "রুফটপ গার্ডেন, ধানমন্ডি"
+        },
+        "address": {
+          "en": "House 12, Road 5, Dhanmondi, Dhaka",
+          "bn": "বাড়ি ১২, রোড ৫, ধানমন্ডি, ঢাকা"
+        },
+        "note": {
+          "en": "Wear yellow or green",
+          "bn": "হলুদ বা সবুজ পোশাকে আসুন"
+        },
+        "mapLink": ""
+      },
+      {
+        "main": true,
+        "name": {
+          "en": "Wedding Ceremony",
+          "bn": "বিয়ের অনুষ্ঠান"
+        },
+        "date": "2026-12-18",
+        "time": "19:00",
+        "venue": {
+          "en": "The Grand Ballroom, Gulshan",
+          "bn": "দ্য গ্র্যান্ড বলরুম, গুলশান"
+        },
+        "address": {
+          "en": "Road 90, Gulshan 2, Dhaka",
+          "bn": "রোড ৯০, গুলশান ২, ঢাকা"
+        },
+        "note": {
+          "en": "",
+          "bn": ""
+        },
+        "mapLink": ""
+      },
+      {
+        "main": false,
+        "name": {
+          "en": "Reception (Bou Bhat)",
+          "bn": "বৌভাত"
+        },
+        "date": "2026-12-19",
+        "time": "19:30",
+        "venue": {
+          "en": "Lakeshore Hall, Banani",
+          "bn": "লেকশোর হল, বনানী"
+        },
+        "address": {
+          "en": "Road 11, Banani, Dhaka",
+          "bn": "রোড ১১, বনানী, ঢাকা"
+        },
+        "note": {
+          "en": "",
+          "bn": ""
+        },
+        "mapLink": ""
+      }
+    ]
+  },
+  "venue": {
+    "show": true,
+    "title": {
+      "en": "Location",
+      "bn": "স্থান"
+    },
+    "name": {
+      "en": "The Grand Ballroom",
+      "bn": "দ্য গ্র্যান্ড বলরুম"
+    },
+    "address": {
+      "en": "Road 90, Gulshan 2, Dhaka",
+      "bn": "রোড ৯০, গুলশান ২, ঢাকা"
+    },
+    "mapSearch": "Gulshan 2, Dhaka",
+    "mapLink": "",
+    "button": {
+      "en": "Open in Google Maps",
+      "bn": "গুগল ম্যাপে খুলুন"
+    }
+  },
+  "menu": {
+    "show": true,
+    "eyebrow": {
+      "en": "The wedding feast",
+      "bn": "বিয়ের ভোজ"
+    },
+    "title": {
+      "en": "Menu",
+      "bn": "খাবারের তালিকা"
+    },
+    "items": [
+      {
+        "course": {
+          "en": "To begin",
+          "bn": "শুরুতে"
+        },
+        "dishes": {
+          "en": "Chicken Corn Soup · Fresh Salad",
+          "bn": "চিকেন কর্ন স্যুপ · সালাদ"
+        }
+      },
+      {
+        "course": {
+          "en": "The main",
+          "bn": "প্রধান পদ"
+        },
+        "dishes": {
+          "en": "Mutton Kacchi Biryani · Chicken Roast · Jali Kabab",
+          "bn": "খাসির কাচ্চি বিরিয়ানি · মুরগির রোস্ট · জালি কাবাব"
+        }
+      },
+      {
+        "course": {
+          "en": "To drink",
+          "bn": "পানীয়"
+        },
+        "dishes": {
+          "en": "Borhani · Soft Drinks",
+          "bn": "বোরহানি · কোমল পানীয়"
+        }
+      },
+      {
+        "course": {
+          "en": "Something sweet",
+          "bn": "মিষ্টিমুখ"
+        },
+        "dishes": {
+          "en": "Shahi Firni · Zorda · Mishti Doi",
+          "bn": "শাহী ফিরনি · জর্দা · মিষ্টি দই"
+        }
+      }
+    ]
+  },
+  "dressCode": {
+    "show": true,
+    "title": {
+      "en": "Dress Code",
+      "bn": "পোশাক"
+    },
+    "heading": {
+      "en": "Traditional Elegance",
+      "bn": "ঐতিহ্যবাহী সাজ"
+    },
+    "text": {
+      "en": "Ladies in saree or lehenga, gentlemen in panjabi or sherwani. Shades of red, gold and ivory are most welcome.",
+      "bn": "নারীরা শাড়ি বা লেহেঙ্গা, পুরুষেরা পাঞ্জাবি বা শেরওয়ানি। লাল, সোনালি ও আইভরি রঙ হলে খুব ভালো হয়।"
+    },
+    "colorsLabel": {
+      "en": "Suggested colours",
+      "bn": "পছন্দের রং"
+    },
+    "colors": [
+      "#8e1b24",
+      "#b8323a",
+      "#c8a25c",
+      "#efe2cc"
+    ]
+  },
+  "gifts": {
+    "show": false,
+    "eyebrow": {
+      "en": "A gentle note",
+      "bn": "একটি অনুরোধ"
+    },
+    "title": {
+      "en": "Gifts",
+      "bn": "উপহার"
+    },
+    "text": {
+      "en": "Your presence and prayers are the greatest gift to us. If you would like to bless us with something more, a gift envelope will be warmly received.",
+      "bn": "আপনার উপস্থিতি ও দোয়াই আমাদের জন্য সবচেয়ে বড় উপহার। এর বাইরে কিছু দিতে চাইলে, উপহার খাম সাদরে গ্রহণ করা হবে।"
+    },
+    "detailsButton": {
+      "en": "Show details",
+      "bn": "বিস্তারিত দেখুন"
+    },
+    "details": {
+      "en": "",
+      "bn": ""
+    }
+  },
+  "rsvp": {
+    "show": false,
+    "title": {
+      "en": "RSVP",
+      "bn": "উপস্থিতি নিশ্চিত করুন"
+    },
+    "text": {
+      "en": "Kindly let us know by 5 December if you can join us.",
+      "bn": "অনুগ্রহ করে ৫ ডিসেম্বরের মধ্যে জানাবেন আপনি আসছেন কি না।"
+    },
+    "whatsapp": "8801700000000",
+    "phone": "",
+    "formUrl": "",
+    "nameLabel": {
+      "en": "Your name",
+      "bn": "আপনার নাম"
+    },
+    "yesLabel": {
+      "en": "Joyfully attending",
+      "bn": "অবশ্যই আসছি"
+    },
+    "noLabel": {
+      "en": "Sadly can't make it",
+      "bn": "আসতে পারছি না"
+    },
+    "guestsLabel": {
+      "en": "Number of guests",
+      "bn": "অতিথির সংখ্যা"
+    },
+    "messageLabel": {
+      "en": "A note for the couple (optional)",
+      "bn": "নবদম্পতির জন্য শুভেচ্ছা (ঐচ্ছিক)"
+    },
+    "button": {
+      "en": "Send RSVP on WhatsApp",
+      "bn": "হোয়াটসঅ্যাপে পাঠান"
+    },
+    "formButton": {
+      "en": "Open RSVP form",
+      "bn": "আরএসভিপি ফর্ম খুলুন"
+    },
+    "callButton": {
+      "en": "Call us",
+      "bn": "ফোন করুন"
+    },
+    "nameMissing": {
+      "en": "Please write your name first",
+      "bn": "আগে আপনার নাম লিখুন"
+    },
+    "yesWord": {
+      "en": "will attend",
+      "bn": "আসছি"
+    },
+    "noWord": {
+      "en": "sadly can't attend",
+      "bn": "আসতে পারছি না"
+    },
+    "messageTemplate": {
+      "en": "Hello! This is {name}. I {status} the wedding of {couple}. Guests: {guests}. {message}",
+      "bn": "শুভেচ্ছা! আমি {name}। {couple}-এর বিয়েতে আমি {status}। অতিথি: {guests} জন। {message}"
+    },
+    "maxGuests": 10
+  },
+  "custom": {
+    "items": []
+  },
+  "closing": {
+    "show": true,
+    "title": {
+      "en": "See you there",
+      "bn": "দেখা হবে"
+    },
+    "text": {
+      "en": "Your presence will make our day complete.",
+      "bn": "আপনার উপস্থিতিই আমাদের দিনটিকে পূর্ণ করবে।"
+    },
+    "signature": {
+      "en": "With love",
+      "bn": "ভালোবাসায়"
+    },
+    "hashtag": "#RafiWedsNabila",
+    "calendarButton": {
+      "en": "Add to calendar",
+      "bn": "ক্যালেন্ডারে যোগ করুন"
+    }
+  },
+  "labels": {
+    "directions": {
+      "en": "Directions",
+      "bn": "দিকনির্দেশনা"
+    },
+    "language": {
+      "en": "বাং",
+      "bn": "EN"
+    }
+  }
+}
