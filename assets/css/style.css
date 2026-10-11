@@ -29,10 +29,6 @@
   --safe-t: env(safe-area-inset-top, 0px);
   --safe-b: env(safe-area-inset-bottom, 0px);
 }
-html[lang="bn"] {
-  --script: 'Galada', 'Pinyon Script', cursive;
-  --serif: 'Noto Serif Bengali', 'Cormorant Garamond', Georgia, serif;
-}
 
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; }
@@ -88,7 +84,6 @@ body.opening .seal-wrap, body.opened .seal-wrap { opacity: 0; transform: scale(1
 .guest-note { font-family: var(--script); font-size: clamp(26px, 8vw, 36px); line-height: 1.15; }
 .guest-note small { display: block; font-family: var(--serif); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; margin-top: 4px; }
 .tap-hint { font-size: 12px; letter-spacing: .3em; text-transform: uppercase; font-weight: 600; animation: breathe 2.4s ease-in-out infinite; }
-html[lang="bn"] .tap-hint, html[lang="bn"] .guest-note small { letter-spacing: .02em; font-size: 13px; }
 
 .hero-inner {
   position: absolute; inset: 0; z-index: 2;
@@ -105,24 +100,20 @@ body.opened .hero-inner > * { opacity: 1; transform: none; }
   font-size: clamp(10.5px, 2.9vw, 12.5px); font-weight: 600; letter-spacing: .26em; text-transform: uppercase;
   color: var(--muted); margin: 0; line-height: 1.7;
 }
-html[lang="bn"] .hero .top-line, html[lang="bn"] .eyebrow { letter-spacing: .02em; font-size: clamp(12.5px, 3.5vw, 14.5px); font-weight: 500; }
 .names { margin: clamp(10px, 2.4svh, 22px) 0; font-family: var(--script); color: var(--accent); font-weight: 400; line-height: 1; }
 .names .n { display: block; font-size: clamp(46px, min(16vw, 9.5svh), 92px); white-space: nowrap; }
 .names .n.wrap { white-space: normal; overflow-wrap: anywhere; line-height: 1.1; }
 .names .amp { display: block; font-size: clamp(28px, min(9vw, 5.5svh), 52px); margin: -.05em 0 .02em; opacity: .9; }
-html[lang="bn"] .names .n { font-size: clamp(40px, min(13.5vw, 8svh), 80px); line-height: 1.25; }
 .hero .invite {
   font-size: clamp(10.5px, 2.9vw, 12.5px); font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
   color: var(--text); max-width: 30em; margin: 0; line-height: 1.85;
 }
-html[lang="bn"] .hero .invite { letter-spacing: .02em; text-transform: none; font-size: clamp(13px, 3.7vw, 15.5px); font-weight: 400; line-height: 1.75; }
 .scroll-hint {
   position: absolute; left: 50%; bottom: calc(var(--safe-b) + 3.5svh); transform: translateX(-50%) !important;
   display: flex; flex-direction: column; align-items: center; gap: 6px;
   font-size: 10.5px; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); font-weight: 600;
 }
 .scroll-hint::after { content: ''; width: 1px; height: 34px; background: linear-gradient(var(--muted), transparent); animation: drip 2s ease-in-out infinite; transform-origin: top; }
-html[lang="bn"] .scroll-hint { letter-spacing: .02em; font-size: 12px; }
 
 /* ============ Sections ============ */
 main { position: relative; z-index: 1; overflow-x: hidden; overflow-x: clip; }
@@ -133,9 +124,7 @@ main { position: relative; z-index: 1; overflow-x: hidden; overflow-x: clip; }
 }
 .block + .block { padding-top: clamp(24px, 6vw, 40px); }
 .script-title { font-family: var(--script); font-weight: 400; color: var(--accent); font-size: clamp(44px, 13vw, 62px); line-height: 1.12; margin: 6px 0 10px; }
-html[lang="bn"] .script-title { font-size: clamp(34px, 10vw, 48px); line-height: 1.35; }
 .lead { font-style: italic; font-size: clamp(17px, 4.8vw, 20px); color: var(--text); margin: 8px auto 0; max-width: 26em; }
-html[lang="bn"] .lead { font-style: normal; font-size: clamp(15px, 4.2vw, 17px); line-height: 1.8; }
 .muted { color: var(--muted); }
 .orn { fill: none; stroke: var(--accent); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
 .orn .thin { stroke-width: .9; }
@@ -157,14 +146,12 @@ html[lang="bn"] .lead { font-style: normal; font-size: clamp(15px, 4.2vw, 17px);
   box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), .45);
 }
 .scratch .val { max-width: 100%; font-size: clamp(21px, 6.4vw, 28px); font-weight: 600; color: var(--accent); line-height: 1.1; padding: 0 6px; }
-html[lang="bn"] .scratch .val { font-size: clamp(15px, 4.6vw, 20px); font-weight: 500; }
 .scratch canvas { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; touch-action: none; cursor: grab; transition: opacity .7s ease, transform .7s ease; filter: drop-shadow(0 3px 6px rgba(0,0,0,.18)); }
 .scratch.done canvas { opacity: 0; transform: scale(1.15); pointer-events: none; }
 .reveal-all { background: none; border: 0; color: var(--muted); font-size: 14px; font-style: italic; text-decoration: underline; text-underline-offset: 3px; padding: 10px; min-height: 44px; }
 .after-reveal { max-height: 0; opacity: 0; overflow: hidden; transition: opacity 1.2s ease, max-height 1.2s ease; }
 .after-reveal.show { max-height: 260px; opacity: 1; }
 .after-reveal .script-title { font-size: clamp(34px, 10vw, 46px); margin-top: 10px; }
-html[lang="bn"] .after-reveal .script-title { font-size: clamp(28px, 8.5vw, 38px); }
 
 /* --- Countdown --- */
 .countdown { display: grid; grid-template-columns: repeat(4, 1fr); margin: 20px auto 0; max-width: 400px; }
@@ -172,14 +159,11 @@ html[lang="bn"] .after-reveal .script-title { font-size: clamp(28px, 8.5vw, 38px
 .countdown div + div::before { content: ''; position: absolute; left: 0; top: 18%; bottom: 18%; width: 1px; background: rgba(var(--accent-rgb), .2); }
 .countdown b { display: block; font-weight: 500; font-size: clamp(30px, 9.5vw, 44px); color: var(--accent); line-height: 1.1; font-variant-numeric: lining-nums tabular-nums; }
 .countdown span { display: block; font-size: clamp(9.5px, 2.6vw, 11px); letter-spacing: .22em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-top: 4px; }
-html[lang="bn"] .countdown span { letter-spacing: 0; font-size: 13px; font-weight: 500; }
-html[lang="bn"] .countdown b { font-size: clamp(26px, 8vw, 38px); }
 .countdown-done { font-family: var(--script); font-size: 34px; color: var(--accent); }
 
 /* --- Families --- */
 .families { display: grid; grid-template-columns: 1fr; gap: 22px; margin-top: 18px; }
 .families .fam-label { font-family: var(--script); color: var(--accent); font-size: 26px; line-height: 1.2; }
-html[lang="bn"] .families .fam-label { font-size: 22px; }
 .families .fam-name { font-size: clamp(17px, 4.8vw, 19px); margin: 2px 0 0; }
 .families .fam-amp { font-family: var(--script); color: var(--gold); font-size: 30px; line-height: 1; }
 .families > div { min-width: 0; }
@@ -205,24 +189,17 @@ html[lang="bn"] .families .fam-label { font-size: 22px; }
 .event + .event::before { content: '◆'; position: absolute; left: 50%; transform: translate(-50%, -32px); font-size: 8px; color: var(--gold); }
 .event { position: relative; }
 .event-name { font-size: clamp(12.5px, 3.5vw, 14px); letter-spacing: .24em; text-transform: uppercase; font-weight: 700; color: var(--accent); margin: 0 0 4px; }
-html[lang="bn"] .event-name { letter-spacing: .02em; font-size: 17px; font-weight: 600; }
 .event-date { font-style: italic; font-size: clamp(18px, 5vw, 21px); margin: 0; }
-html[lang="bn"] .event-date { font-style: normal; font-size: 16px; }
 .event-time { font-size: clamp(16px, 4.5vw, 18px); margin: 0; font-weight: 500; }
 .event-venue { margin: 6px 0 0; font-size: clamp(16px, 4.5vw, 18px); font-weight: 600; }
 .event-address { margin: 0; color: var(--muted); font-size: clamp(15px, 4.2vw, 16.5px); line-height: 1.45; }
 .event-note { margin: 6px 0 0; font-style: italic; color: var(--muted); font-size: 16px; }
-html[lang="bn"] .event-venue, html[lang="bn"] .event-time { font-size: 15.5px; }
-html[lang="bn"] .event-address, html[lang="bn"] .event-note { font-size: 14px; font-style: normal; }
 .link-caps { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 11.5px; letter-spacing: .22em; text-transform: uppercase; font-weight: 700; color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(var(--accent-rgb), .35); padding: 8px 0 3px; }
-html[lang="bn"] .link-caps { letter-spacing: 0; font-size: 13px; }
 
 .menu-course { margin: 0; }
 .menu-course + .menu-course { margin-top: 18px; }
 .menu-course h4 { margin: 0; font-size: clamp(12px, 3.4vw, 13.5px); letter-spacing: .26em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
-html[lang="bn"] .menu-course h4 { letter-spacing: 0; font-size: 16px; font-weight: 600; }
 .menu-course p { margin: 4px 0 0; font-style: italic; font-size: clamp(17px, 4.8vw, 19px); line-height: 1.45; }
-html[lang="bn"] .menu-course p { font-style: normal; font-size: 15px; line-height: 1.7; }
 .menu-card { padding-bottom: clamp(48px, 12vw, 60px); }
 
 /* --- Venue --- */
@@ -243,19 +220,15 @@ html[lang="bn"] .menu-course p { font-style: normal; font-size: 15px; line-heigh
 .btn:active { transform: scale(.97); }
 .btn-ghost { background: transparent; color: var(--accent); box-shadow: none; border-color: rgba(var(--accent-rgb), .45); }
 .btn svg { width: 18px; height: 18px; fill: currentColor; }
-html[lang="bn"] .btn { letter-spacing: 0; font-size: 15px; font-weight: 600; }
 .btn-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 12px; }
 
 /* --- Dress code --- */
 .dress-heading { font-size: clamp(13px, 3.6vw, 14.5px); letter-spacing: .26em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin: 4px 0 0; }
-html[lang="bn"] .dress-heading { letter-spacing: 0; font-size: 17px; }
 .swatches { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px 8px; margin: 16px 0 6px; }
 .swatch { width: clamp(64px, 19vw, 82px); display: flex; flex-direction: column; align-items: center; gap: 13px; }
 .swatch i { width: clamp(38px, 11vw, 48px); aspect-ratio: 1; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), 0 0 0 4px var(--card), 0 0 0 5px rgba(var(--gold-rgb), .5); }
 .swatch span { max-width: 100%; font-style: italic; font-size: clamp(15px, 4.2vw, 17px); line-height: 1.2; color: var(--text); }
-html[lang="bn"] .swatch span { font-style: normal; font-size: 14px; line-height: 1.45; }
 .swatch-label { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin: 26px 0 0; }
-html[lang="bn"] .swatch-label { letter-spacing: 0; font-size: 14px; }
 
 /* --- Gifts --- */
 .orn-gift { width: 94px; display: block; margin: 0 auto 2px; }
@@ -265,7 +238,6 @@ html[lang="bn"] .swatch-label { letter-spacing: 0; font-size: 14px; }
 /* --- RSVP --- */
 .rsvp-form { margin: 24px auto 0; max-width: 360px; text-align: left; display: grid; gap: 18px; }
 .field label { display: block; font-size: 11.5px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
-html[lang="bn"] .field label { letter-spacing: 0; font-size: 13.5px; font-weight: 500; }
 .field input, .field select, .field textarea {
   width: 100%; font: inherit; font-size: 18px; color: var(--text);
   background: transparent; border: 0; border-bottom: 1px solid rgba(var(--accent-rgb), .3);
@@ -304,7 +276,6 @@ html[lang="bn"] .field label { letter-spacing: 0; font-size: 13.5px; font-weight
   transition: transform .2s ease, opacity .3s ease;
 }
 .fab:active { transform: scale(.94); }
-.fab-lang { top: calc(var(--safe-t) + 14px); font-family: 'Noto Serif Bengali', var(--serif); }
 .fab-music { bottom: calc(var(--safe-b) + 18px); }
 .fab-music svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .fab-music.playing::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 1px solid var(--accent); opacity: .5; animation: pulse 2.2s ease-out infinite; }

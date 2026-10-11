@@ -1,7 +1,5 @@
 {
   "settings": {
-    "defaultLanguage": "en",
-    "showLanguageSwitch": true,
     "timezone": "+06:00",
     "theme": "blush",
     "colors": {
@@ -42,154 +40,123 @@
   },
   "couple": {
     "name1": {
-      "en": "Israt Jesmine Anusha",
-      "bn": ""
+      "en": "Israt Jesmine Anusha"
     },
     "name2": {
-      "en": "Jamilur Islam Biswas",
-      "bn": ""
+      "en": "Jamilur Islam Biswas"
     },
     "joiner": {
-      "en": "&",
-      "bn": ""
+      "en": "&"
     },
     "monogram": {
-      "en": "",
-      "bn": ""
+      "en": ""
     }
   },
   "intro": {
     "tapHint": {
-      "en": "Tap to open",
-      "bn": ""
+      "en": "Tap to open"
     },
     "guestGreeting": {
-      "en": "",
-      "bn": ""
+      "en": ""
     },
     "youAreInvited": {
-      "en": "",
-      "bn": ""
+      "en": ""
     }
   },
   "hero": {
     "topLine": {
-      "en": "With the Blessings of Allah we are delighted to invite you to the akht ceremony of",
-      "bn": ""
+      "en": "With the Blessings of Allah we are delighted to invite you to the akht ceremony of"
     },
     "invitation": {
-      "en": "",
-      "bn": ""
+      "en": ""
     },
     "scrollHint": {
-      "en": "Scroll",
-      "bn": "নিচে দেখুন"
+      "en": "Scroll"
     }
   },
   "reveal": {
     "show": true,
     "title": {
-      "en": "Save the Date",
-      "bn": ""
+      "en": "Save the Date"
     },
     "subtitle": {
-      "en": "Scratch to discover the date",
-      "bn": ""
+      "en": "Scratch to discover the date"
     },
     "after": {
-      "en": "We're getting married!",
-      "bn": ""
+      "en": "We're getting married!"
     },
     "revealAll": {
-      "en": "or tap here to reveal",
-      "bn": ""
+      "en": "or tap here to reveal"
     }
   },
   "countdown": {
     "show": true,
     "title": {
-      "en": "Countdown",
-      "bn": "আর মাত্র"
+      "en": "Countdown"
     },
     "days": {
-      "en": "Days",
-      "bn": "দিন"
+      "en": "Days"
     },
     "hours": {
-      "en": "Hours",
-      "bn": "ঘণ্টা"
+      "en": "Hours"
     },
     "minutes": {
-      "en": "Minutes",
-      "bn": "মিনিট"
+      "en": "Minutes"
     },
     "seconds": {
-      "en": "Seconds",
-      "bn": "সেকেন্ড"
+      "en": "Seconds"
     },
     "done": {
-      "en": "The celebration has begun!",
-      "bn": "উৎসব শুরু হয়ে গেছে!"
+      "en": "The celebration has begun!"
     }
   },
   "families": {
     "show": true,
     "eyebrow": {
-      "en": "With the blessings of our families",
-      "bn": "পরিবারের দোয়া ও আশীর্বাদে"
+      "en": "With the blessings of our families"
     },
     "family1": {
-      "en": "Daughter of\nMustafa Amin Khan Mazlish (Azad) & Nurunnaher Begum (Jesmin)",
-      "bn": "জনাব আব্দুর রহমান ও\nমিসেস সালমা রহমান-এর পুত্র"
+      "en": "Daughter of\nMustafa Amin Khan Mazlish (Azad) & Nurunnaher Begum (Jesmin)"
     },
     "family2": {
-      "en": "Only son of\nSaleh Uddin Biswas & Farjana Begum",
-      "bn": "জনাব কামাল হোসেন ও\nমিসেস রুমা হোসেন-এর কন্যা"
+      "en": "Only son of\nSaleh Uddin Biswas & Farjana Begum"
     }
   },
   "photo": {
     "show": false,
     "title": {
-      "en": "Our Moment",
-      "bn": "আমাদের মুহূর্ত"
+      "en": "Our Moment"
     },
     "image": "",
     "caption": {
-      "en": "",
-      "bn": ""
+      "en": ""
     }
   },
   "events": {
     "show": true,
     "eyebrow": {
-      "en": "Join us for",
-      "bn": ""
+      "en": "Join us for"
     },
     "title": {
-      "en": "The Celebrations",
-      "bn": ""
+      "en": "The Celebrations"
     },
     "showIllustration": true,
     "items": [
       {
         "main": false,
         "name": {
-          "en": "Akht",
-          "bn": ""
+          "en": "Akht"
         },
         "date": "2026-10-15",
         "time": "",
         "venue": {
-          "en": "Amber Glass House",
-          "bn": ""
+          "en": "Amber Glass House"
         },
         "address": {
-          "en": "Banani Club, Dhaka",
-          "bn": ""
+          "en": "Banani Club, Dhaka"
         },
         "note": {
-          "en": "",
-          "bn": ""
+          "en": ""
         },
         "mapLink": "https://maps.app.goo.gl/PH9XgxPUouWW5tq46"
       }
@@ -198,73 +165,59 @@
   "venue": {
     "show": true,
     "title": {
-      "en": "Location",
-      "bn": ""
+      "en": "Location"
     },
     "name": {
-      "en": "Amber Glass House, Banani Club",
-      "bn": ""
+      "en": "Amber Glass House, Banani Club"
     },
     "address": {
-      "en": "103, 105 & 109, Road 1 Block F, Dhaka 1213",
-      "bn": ""
+      "en": "103, 105 & 109, Road 1 Block F, Dhaka 1213"
     },
     "mapSearch": "Banani Club",
     "mapLink": "https://maps.app.goo.gl/PH9XgxPUouWW5tq46",
     "button": {
-      "en": "Open in Google Maps",
-      "bn": ""
+      "en": "Open in Google Maps"
     }
   },
   "menu": {
     "show": false,
     "eyebrow": {
-      "en": "The wedding feast",
-      "bn": "বিয়ের ভোজ"
+      "en": "The wedding feast"
     },
     "title": {
-      "en": "Menu",
-      "bn": "খাবারের তালিকা"
+      "en": "Menu"
     },
     "items": [
       {
         "course": {
-          "en": "To begin",
-          "bn": "শুরুতে"
+          "en": "To begin"
         },
         "dishes": {
-          "en": "Chicken Corn Soup · Fresh Salad",
-          "bn": "চিকেন কর্ন স্যুপ · সালাদ"
+          "en": "Chicken Corn Soup · Fresh Salad"
         }
       },
       {
         "course": {
-          "en": "The main",
-          "bn": "প্রধান পদ"
+          "en": "The main"
         },
         "dishes": {
-          "en": "Mutton Kacchi Biryani · Chicken Roast · Jali Kabab",
-          "bn": "খাসির কাচ্চি বিরিয়ানি · মুরগির রোস্ট · জালি কাবাব"
+          "en": "Mutton Kacchi Biryani · Chicken Roast · Jali Kabab"
         }
       },
       {
         "course": {
-          "en": "To drink",
-          "bn": "পানীয়"
+          "en": "To drink"
         },
         "dishes": {
-          "en": "Borhani · Soft Drinks",
-          "bn": "বোরহানি · কোমল পানীয়"
+          "en": "Borhani · Soft Drinks"
         }
       },
       {
         "course": {
-          "en": "Something sweet",
-          "bn": "মিষ্টিমুখ"
+          "en": "Something sweet"
         },
         "dishes": {
-          "en": "Shahi Firni · Zorda · Mishti Doi",
-          "bn": "শাহী ফিরনি · জর্দা · মিষ্টি দই"
+          "en": "Shahi Firni · Zorda · Mishti Doi"
         }
       }
     ]
@@ -272,41 +225,34 @@
   "dressCode": {
     "show": true,
     "title": {
-      "en": "Dress Code",
-      "bn": ""
+      "en": "Dress Code"
     },
     "heading": {
-      "en": "Traditional Elegance",
-      "bn": ""
+      "en": "Traditional Elegance"
     },
     "text": {
-      "en": "",
-      "bn": ""
+      "en": ""
     },
     "colorsLabel": {
-      "en": "Suggested colours",
-      "bn": ""
+      "en": "Suggested colours"
     },
     "colors": [
       {
         "color": "#fffdd0",
         "name": {
-          "en": "Cream",
-          "bn": "হালকা হলুদ"
+          "en": "Cream"
         }
       },
       {
         "color": "#ffffff",
         "name": {
-          "en": "White",
-          "bn": "সাদা"
+          "en": "White"
         }
       },
       {
         "color": "#fffff0",
         "name": {
-          "en": "Ivory",
-          "bn": "সাদা"
+          "en": "Ivory"
         }
       }
     ]
@@ -314,86 +260,67 @@
   "gifts": {
     "show": false,
     "eyebrow": {
-      "en": "A gentle note",
-      "bn": "একটি অনুরোধ"
+      "en": "A gentle note"
     },
     "title": {
-      "en": "Gifts",
-      "bn": "উপহার"
+      "en": "Gifts"
     },
     "text": {
-      "en": "Your presence and prayers are the greatest gift to us. If you would like to bless us with something more, a gift envelope will be warmly received.",
-      "bn": "আপনার উপস্থিতি ও দোয়াই আমাদের জন্য সবচেয়ে বড় উপহার। এর বাইরে কিছু দিতে চাইলে, উপহার খাম সাদরে গ্রহণ করা হবে।"
+      "en": "Your presence and prayers are the greatest gift to us. If you would like to bless us with something more, a gift envelope will be warmly received."
     },
     "detailsButton": {
-      "en": "Show details",
-      "bn": "বিস্তারিত দেখুন"
+      "en": "Show details"
     },
     "details": {
-      "en": "",
-      "bn": ""
+      "en": ""
     }
   },
   "rsvp": {
     "show": false,
     "title": {
-      "en": "RSVP",
-      "bn": "উপস্থিতি নিশ্চিত করুন"
+      "en": "RSVP"
     },
     "text": {
-      "en": "Kindly let us know by 5 December if you can join us.",
-      "bn": "অনুগ্রহ করে ৫ ডিসেম্বরের মধ্যে জানাবেন আপনি আসছেন কি না।"
+      "en": "Kindly let us know by 5 December if you can join us."
     },
     "whatsapp": "8801700000000",
     "phone": "",
     "formUrl": "",
     "nameLabel": {
-      "en": "Your name",
-      "bn": "আপনার নাম"
+      "en": "Your name"
     },
     "yesLabel": {
-      "en": "Joyfully attending",
-      "bn": "অবশ্যই আসছি"
+      "en": "Joyfully attending"
     },
     "noLabel": {
-      "en": "Sadly can't make it",
-      "bn": "আসতে পারছি না"
+      "en": "Sadly can't make it"
     },
     "guestsLabel": {
-      "en": "Number of guests",
-      "bn": "অতিথির সংখ্যা"
+      "en": "Number of guests"
     },
     "messageLabel": {
-      "en": "A note for the couple (optional)",
-      "bn": "নবদম্পতির জন্য শুভেচ্ছা (ঐচ্ছিক)"
+      "en": "A note for the couple (optional)"
     },
     "button": {
-      "en": "Send RSVP on WhatsApp",
-      "bn": "হোয়াটসঅ্যাপে পাঠান"
+      "en": "Send RSVP on WhatsApp"
     },
     "formButton": {
-      "en": "Open RSVP form",
-      "bn": "আরএসভিপি ফর্ম খুলুন"
+      "en": "Open RSVP form"
     },
     "callButton": {
-      "en": "Call us",
-      "bn": "ফোন করুন"
+      "en": "Call us"
     },
     "nameMissing": {
-      "en": "Please write your name first",
-      "bn": "আগে আপনার নাম লিখুন"
+      "en": "Please write your name first"
     },
     "yesWord": {
-      "en": "will attend",
-      "bn": "আসছি"
+      "en": "will attend"
     },
     "noWord": {
-      "en": "sadly can't attend",
-      "bn": "আসতে পারছি না"
+      "en": "sadly can't attend"
     },
     "messageTemplate": {
-      "en": "Hello! This is {name}. I {status} the wedding of {couple}. Guests: {guests}. {message}",
-      "bn": "শুভেচ্ছা! আমি {name}। {couple}-এর বিয়েতে আমি {status}। অতিথি: {guests} জন। {message}"
+      "en": "Hello! This is {name}. I {status} the wedding of {couple}. Guests: {guests}. {message}"
     },
     "maxGuests": 10
   },
@@ -403,31 +330,22 @@
   "closing": {
     "show": false,
     "title": {
-      "en": "See you there",
-      "bn": "দেখা হবে"
+      "en": "See you there"
     },
     "text": {
-      "en": "Your presence will make our day complete.",
-      "bn": "আপনার উপস্থিতিই আমাদের দিনটিকে পূর্ণ করবে।"
+      "en": "Your presence will make our day complete."
     },
     "signature": {
-      "en": "With love",
-      "bn": "ভালোবাসায়"
+      "en": "With love"
     },
     "hashtag": "#RafiWedsNabila",
     "calendarButton": {
-      "en": "Add to calendar",
-      "bn": "ক্যালেন্ডারে যোগ করুন"
+      "en": "Add to calendar"
     }
   },
   "labels": {
     "directions": {
-      "en": "Directions",
-      "bn": "দিকনির্দেশনা"
-    },
-    "language": {
-      "en": "বাং",
-      "bn": "EN"
+      "en": "Directions"
     }
   }
 }

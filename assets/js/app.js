@@ -12,14 +12,10 @@
   const DEFAULT_ORDER = ['reveal', 'countdown', 'families', 'photo', 'events', 'venue', 'menu', 'dressCode', 'gifts', 'rsvp', 'closing'];
 
   const state = {
-    content: null, lang: 'en', opened: false, opening: false,
+    content: null, lang: 'en', // the invitation is in English only
+    opened: false, opening: false,
     revealed: [false, false, false], celebrated: false,
     assets: {}, firstRender: true, timer: null, observers: []
-  };
-
-  const store = {
-    get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
-    set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* private mode */ } }
   };
 
   /* ---------- helpers ---------- */
@@ -145,13 +141,16 @@
       <circle cx="50" cy="50.9" r="35.5" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="1"/>
       ${text}</svg>`;
   }
+  // "Dear {name}" for personal links; empty when there is no guest name or the greeting was cleared
+  const guestGreeting = () => (guestName ? t(state.content.intro.guestGreeting).replace('{name}', guestName).trim() : '');
   function renderIntro() {
     const c = state.content;
     $('#seal').innerHTML = sealSVG();
     $('#tapHint').textContent = t(c.intro.tapHint);
     const note = $('#guestNote');
-    if (guestName) {
-      note.innerHTML = `${esc(t(c.intro.guestGreeting).replace('{name}', guestName))}<small>${esc(t(c.intro.youAreInvited))}</small>`;
+    const greeting = guestGreeting(), invited = t(c.intro.youAreInvited).trim();
+    if (greeting) {
+      note.innerHTML = `${esc(greeting)}${invited ? `<small>${esc(invited)}</small>` : ''}`;
       note.hidden = false;
     } else { note.hidden = true; }
     $('#openBtn').setAttribute('aria-label', t(c.intro.tapHint));
@@ -160,7 +159,7 @@
   /* ---------- hero ---------- */
   function renderHero() {
     const c = state.content, h = c.hero, cp = c.couple;
-    const greet = guestName ? `<p class="greet" style="--d:.1s">${esc(t(c.intro.guestGreeting).replace('{name}', guestName))},</p>` : '';
+    const greet = guestGreeting() ? `<p class="greet" style="--d:.1s">${esc(guestGreeting())},</p>` : '';
     const bismillah = h.bismillah !== false ? `<div class="bismillah" style="--d:0s">${S.SVG.bismillah()}</div>` : '';
     $('#heroInner').innerHTML = `
       ${bismillah}
@@ -199,7 +198,10 @@
       // a full name of several words goes onto two lines rather than becoming tiny
       if (oneLine < base * 0.6 && /\s/.test(el.textContent.trim())) {
         el.classList.add('wrap');
-        el.style.fontSize = Math.min(base * 0.8, oneLine * 1.9) + 'px';
+        let fs = Math.min(base * 0.8, oneLine * 1.9);
+        el.style.fontSize = fs + 'px';
+        // shrink until the name takes at most two lines (.wrap has line-height 1.1)
+        while (Math.round(el.offsetHeight / (fs * 1.1)) > 2 && fs > 22) { fs = Math.max(22, fs * 0.93); el.style.fontSize = fs + 'px'; }
       }
       shrinkToFit(el, 22);
       if (el.scrollWidth > el.clientWidth + 1) el.classList.add('wrap'); // last resort: break the word
@@ -356,10 +358,10 @@
     },
     dressCode(c) {
       const d = c.dressCode;
-      // each colour is { color, name: { en, bn } }; older files have plain "#hex" strings
+      // each colour is { color, name: { en } }; older files have plain "#hex" strings
       const cols = (d.colors || []).map((x) => (x && typeof x === 'object' ? x : { color: x })).filter((x) => x.color);
       const swatch = (x) => {
-        const name = String((x.name && x.name[state.lang]) || '').trim() || S.colorName(x.color)[state.lang];
+        const name = t(x.name).trim() || S.colorName(x.color);
         return `<div class="swatch"><i style="background:${safeColor(x.color)}"></i><span>${esc(name)}</span></div>`;
       };
       return `<section class="block" id="s-dress">
@@ -718,24 +720,9 @@
     else if (wantMusic && state.opened) audio.play().catch(() => {});
   });
 
-  /* ---------- language ---------- */
-  const langBtn = document.getElementById('langBtn');
-  function setupLang() {
-    const s = state.content.settings;
-    langBtn.hidden = s.showLanguageSwitch === false;
-    langBtn.textContent = t(state.content.labels.language) || (state.lang === 'en' ? 'বাং' : 'EN');
-  }
-  langBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    state.lang = state.lang === 'en' ? 'bn' : 'en';
-    store.set('inv-lang', state.lang);
-    renderAll();
-  });
-
   /* ---------- top level ---------- */
   function renderAll() {
     const c = state.content;
-    document.documentElement.lang = state.lang;
     document.title = (c.share && c.share.title) || `${S.tr(c.couple.name1, 'en')} & ${S.tr(c.couple.name2, 'en')} are getting married`;
     applyTheme();
     drawCurtains(cur.p);
@@ -743,7 +730,6 @@
     renderHero();
     renderMain();
     setupMusic();
-    setupLang();
     fitAll();
   }
 
@@ -756,17 +742,13 @@
 
   function start(content) {
     state.content = normalise(content);
-    const s = state.content.settings;
-    const saved = store.get('inv-lang');
-    state.lang = (s.showLanguageSwitch !== false && (saved === 'en' || saved === 'bn')) ? saved : (s.defaultLanguage === 'bn' ? 'bn' : 'en');
-    if (params.get('lang') === 'bn' || params.get('lang') === 'en') state.lang = params.get('lang');
     setupCurtains();
     renderAll();
     $('#openBtn').addEventListener('click', () => openCurtains(false));
     window.addEventListener('resize', fitAllSoon);
     if (document.fonts) {
       if (document.fonts.ready) document.fonts.ready.then(fitAll);
-      // Bangla fonts load only when Bangla is first shown, and change every width
+      // a font that finishes loading late changes every width
       if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', fitAllSoon);
     }
     if (PREVIEW) setTimeout(() => openCurtains(false), 700);
@@ -782,16 +764,12 @@
         state.assets = m.assets || {};
         const first = !state.content;
         state.content = normalise(m.content);
-        if (m.lang) state.lang = m.lang;
         if (first) start(state.content); else renderAll();
       } else if (m.type === 'replay') {
         closeCurtains();
         state.revealed = [false, false, false]; state.celebrated = false;
         renderAll();
         setTimeout(() => openCurtains(false), 600);
-      } else if (m.type === 'lang' && state.content) {
-        state.lang = m.lang === 'bn' ? 'bn' : 'en';
-        renderAll();
       }
     });
   }

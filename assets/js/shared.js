@@ -383,21 +383,15 @@
   /* ---------- colour names (dress code swatches) ----------
      Picks the nearest named colour, compared in OKLab so it matches what the eye sees. */
   const COLOR_NAMES = [
-    ['#ffffff', 'White', 'সাদা'], ['#f7f3ea', 'Off-white', 'অফ-হোয়াইট'], ['#efe2cc', 'Ivory', 'আইভরি'],
-    ['#e9d8b4', 'Cream', 'ক্রিম'], ['#f1dcc0', 'Champagne', 'শ্যাম্পেন'], ['#d8c3a5', 'Beige', 'বেইজ'],
-    ['#c8a25c', 'Gold', 'সোনালি'], ['#d4af37', 'Gold', 'সোনালি'], ['#c0c0c0', 'Silver', 'রুপালি'],
-    ['#8c8c8c', 'Grey', 'ধূসর'], ['#3a3a3a', 'Charcoal', 'চারকোল'], ['#111111', 'Black', 'কালো'],
-    ['#d62828', 'Red', 'লাল'], ['#b8323a', 'Red', 'লাল'], ['#8e1b24', 'Maroon', 'মেরুন'],
-    ['#5c1020', 'Burgundy', 'বারগান্ডি'], ['#f6d1d6', 'Blush Pink', 'হালকা গোলাপি'], ['#ee9fb5', 'Pink', 'গোলাপি'],
-    ['#e0457b', 'Rani Pink', 'রানি গোলাপি'], ['#b0185e', 'Magenta', 'ম্যাজেন্টা'], ['#f6c7a5', 'Peach', 'পিচ'],
-    ['#f08070', 'Coral', 'কোরাল'], ['#f28c28', 'Orange', 'কমলা'], ['#b7410e', 'Rust', 'মরিচা রঙ'], ['#b87333', 'Copper', 'তামাটে'],
-    ['#f5c518', 'Yellow', 'হলুদ'], ['#ffe81a', 'Yellow', 'হলুদ'], ['#fff3a6', 'Light Yellow', 'হালকা হলুদ'], ['#d4a017', 'Mustard', 'সরিষা হলুদ'],
-    ['#8b5a2b', 'Brown', 'বাদামি'], ['#5a3a22', 'Chocolate', 'চকলেট'], ['#2e8b57', 'Green', 'সবুজ'], ['#228b22', 'Green', 'সবুজ'],
-    ['#5fbf3a', 'Parrot Green', 'টিয়া সবুজ'], ['#0f5a43', 'Emerald', 'পান্না সবুজ'], ['#0b3d2e', 'Bottle Green', 'বোতল সবুজ'],
-    ['#6b7a2a', 'Olive', 'জলপাই'], ['#a8dcc1', 'Mint', 'মিন্ট'], ['#9caf88', 'Sage', 'সেজ সবুজ'],
-    ['#1f7a7a', 'Teal', 'টিল'], ['#40c4c4', 'Turquoise', 'ফিরোজা'], ['#87ceeb', 'Sky Blue', 'আকাশি'],
-    ['#1f5fbf', 'Blue', 'নীল'], ['#2b4fa8', 'Royal Blue', 'রয়্যাল ব্লু'], ['#1d2b4f', 'Navy Blue', 'নেভি ব্লু'], ['#14206e', 'Navy Blue', 'নেভি ব্লু'],
-    ['#c7b8e0', 'Lavender', 'ল্যাভেন্ডার'], ['#6a2c91', 'Purple', 'বেগুনি'], ['#4b1d52', 'Plum', 'গাঢ় বেগুনি']
+    ['#ffffff', 'White'], ['#f7f3ea', 'Off-white'], ['#efe2cc', 'Ivory'], ['#e9d8b4', 'Cream'], ['#f1dcc0', 'Champagne'], ['#d8c3a5', 'Beige'],
+    ['#c8a25c', 'Gold'], ['#d4af37', 'Gold'], ['#c0c0c0', 'Silver'], ['#8c8c8c', 'Grey'], ['#3a3a3a', 'Charcoal'], ['#111111', 'Black'],
+    ['#d62828', 'Red'], ['#b8323a', 'Red'], ['#8e1b24', 'Maroon'], ['#5c1020', 'Burgundy'], ['#f6d1d6', 'Blush Pink'], ['#ee9fb5', 'Pink'],
+    ['#e0457b', 'Rani Pink'], ['#b0185e', 'Magenta'], ['#f6c7a5', 'Peach'], ['#f08070', 'Coral'], ['#f28c28', 'Orange'], ['#b7410e', 'Rust'],
+    ['#b87333', 'Copper'], ['#f5c518', 'Yellow'], ['#ffe81a', 'Yellow'], ['#fff3a6', 'Light Yellow'], ['#d4a017', 'Mustard'], ['#8b5a2b', 'Brown'],
+    ['#5a3a22', 'Chocolate'], ['#2e8b57', 'Green'], ['#228b22', 'Green'], ['#5fbf3a', 'Parrot Green'], ['#0f5a43', 'Emerald'], ['#0b3d2e', 'Bottle Green'],
+    ['#6b7a2a', 'Olive'], ['#a8dcc1', 'Mint'], ['#9caf88', 'Sage'], ['#1f7a7a', 'Teal'], ['#40c4c4', 'Turquoise'], ['#87ceeb', 'Sky Blue'],
+    ['#1f5fbf', 'Blue'], ['#2b4fa8', 'Royal Blue'], ['#1d2b4f', 'Navy Blue'], ['#14206e', 'Navy Blue'], ['#c7b8e0', 'Lavender'], ['#6a2c91', 'Purple'],
+    ['#4b1d52', 'Plum']
   ];
   function hexToLab(hex) {
     let h = String(hex || '').trim().replace(/^#/, '');
@@ -414,14 +408,14 @@
   let namedLab = null;
   function colorName(hex) {
     const lab = hexToLab(hex);
-    if (!lab) return { en: '', bn: '' };
+    if (!lab) return '';
     namedLab = namedLab || COLOR_NAMES.map((c) => hexToLab(c[0]));
     let best = 0, bestD = Infinity;
     namedLab.forEach((l, i) => {
       const d = (l[0] - lab[0]) ** 2 + (l[1] - lab[1]) ** 2 + (l[2] - lab[2]) ** 2;
       if (d < bestD) { bestD = d; best = i; }
     });
-    return { en: COLOR_NAMES[best][1], bn: COLOR_NAMES[best][2] };
+    return COLOR_NAMES[best][1];
   }
 
   /* ---------- colour themes ---------- */

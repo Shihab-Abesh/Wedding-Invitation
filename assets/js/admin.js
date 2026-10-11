@@ -19,8 +19,6 @@
     pending: {},       // files waiting to be uploaded: path -> { blob }
     previewAssets: {}, // path -> blob: URL so the preview can show files before GitHub has them
     gh: Object.assign({ owner: '', repo: '', branch: 'main', token: '' }, LS.get('inv-gh', {})),
-    showBn: LS.get('inv-showbn', true),
-    pvLang: 'en',
     pvReady: false,
     publishing: false
   };
@@ -232,7 +230,7 @@
   const pv = $('#pv');
   function sendPreview() {
     if (!st.content || !pv.contentWindow) return;
-    pv.contentWindow.postMessage({ type: 'content', content: clone(st.content), assets: st.previewAssets, lang: st.pvLang }, location.origin);
+    pv.contentWindow.postMessage({ type: 'content', content: clone(st.content), assets: st.previewAssets }, location.origin);
   }
   const sendPreviewSoon = debounce(sendPreview, 180);
   window.addEventListener('message', (e) => {
@@ -240,11 +238,6 @@
     if (e.data.type === 'ready') { st.pvReady = true; sendPreview(); }
   });
   pv.addEventListener('load', () => setTimeout(sendPreview, 50));
-  $$('#pvLang button').forEach((b) => b.addEventListener('click', () => {
-    st.pvLang = b.dataset.lang;
-    $$('#pvLang button').forEach((x) => x.classList.toggle('on', x === b));
-    if (pv.contentWindow) pv.contentWindow.postMessage({ type: 'lang', lang: st.pvLang }, location.origin);
-  }));
   $('#replayBtn').addEventListener('click', () => { if (pv.contentWindow) pv.contentWindow.postMessage({ type: 'replay' }, location.origin); });
 
   /* ---------- tabs ---------- */
@@ -265,27 +258,20 @@
       f.help ? h('p', { class: 'f-help', html: f.help }) : null);
   }
 
+  // invitation text is stored as { en: '…' } (the invitation is in English only)
   function fI18n(f, path) {
-    const long = f.t === 'i18nLong';
-    const mk = (lang) => {
-      const cur = getPath(st.content, path);
-      const val = cur && typeof cur === 'object' ? (cur[lang] || '') : (lang === 'en' ? (cur || '') : '');
-      const props = {
-        class: 'in', value: val, lang, dir: 'auto', spellcheck: lang === 'en' ? 'true' : 'false',
-        placeholder: lang === 'bn' ? 'বাংলায় লিখুন (ঐচ্ছিক)' : (f.ph || ''),
-        oninput: (e) => {
-          let o = getPath(st.content, path);
-          if (!o || typeof o !== 'object') { o = { en: typeof o === 'string' ? o : '', bn: '' }; setPath(st.content, path, o); }
-          o[lang] = e.target.value;
-          changed();
-          if (f.onChange) f.onChange();
-        }
-      };
-      return long ? h('textarea', Object.assign(props, { rows: f.rows || 3 })) : h('input', Object.assign(props, { type: 'text' }));
+    const cur = getPath(st.content, path);
+    const props = {
+      class: 'in', value: cur && typeof cur === 'object' ? (cur.en || '') : (cur || ''), dir: 'auto', placeholder: f.ph || '',
+      oninput: (e) => {
+        let o = getPath(st.content, path);
+        if (!o || typeof o !== 'object') { o = {}; setPath(st.content, path, o); }
+        o.en = e.target.value;
+        changed();
+        if (f.onChange) f.onChange();
+      }
     };
-    return wrap(f, h('div', { class: 'pair' },
-      h('label', { class: 'lang' }, h('span', { class: 'tag' }, 'EN'), mk('en')),
-      h('label', { class: 'lang bn' }, h('span', { class: 'tag' }, 'বাং'), mk('bn'))));
+    return wrap(f, f.t === 'i18nLong' ? h('textarea', Object.assign(props, { rows: f.rows || 3 })) : h('input', Object.assign(props, { type: 'text' })));
   }
 
   function fInput(f, path) {
@@ -443,36 +429,29 @@
     return wrap(f, box);
   }
 
-  /* colour swatches with a name each: { color, name: { en, bn } } */
-  const newSwatch = (hex) => ({ color: hex, name: S.colorName(hex) });
+  /* colour swatches with a name each: { color, name: { en } } */
+  const newSwatch = (hex) => ({ color: hex, name: { en: S.colorName(hex) } });
   function fColorList(f, path) {
     const box = h('div', { class: 'swatch-list' });
     const draw = () => {
       box.innerHTML = '';
       const arr = getPath(st.content, path) || [];
       arr.forEach((it, i) => {
-        if (!it.name || typeof it.name !== 'object') it.name = { en: '', bn: '' };
-        const auto = S.colorName(it.color);
-        const names = ['en', 'bn'].map((lang) => h('input', {
-          class: 'in', type: 'text', lang, dir: 'auto', value: it.name[lang] || '', placeholder: auto[lang],
-          'aria-label': `Colour ${i + 1} name (${lang === 'bn' ? 'Bangla' : 'English'})`,
-          oninput: (e) => { it.name[lang] = e.target.value; changed(); }
-        }));
+        if (!it.name || typeof it.name !== 'object') it.name = { en: '' };
+        const name = h('input', {
+          class: 'in', type: 'text', value: it.name.en || '', placeholder: S.colorName(it.color), 'aria-label': `Colour ${i + 1} name`,
+          oninput: (e) => { it.name.en = e.target.value; changed(); }
+        });
         const pick = h('input', { type: 'color', value: normHex(it.color), 'aria-label': 'Colour ' + (i + 1) });
         pick.addEventListener('input', () => {
-          // names that were filled in automatically follow the colour; typed ones stay
+          // a name that was filled in automatically follows the colour; a typed one stays
           const before = S.colorName(it.color), after = S.colorName(pick.value);
-          ['en', 'bn'].forEach((lang, k) => {
-            if (!it.name[lang] || it.name[lang] === before[lang]) { it.name[lang] = after[lang]; names[k].value = after[lang]; }
-            names[k].placeholder = after[lang];
-          });
+          if (!it.name.en || it.name.en === before) { it.name.en = after; name.value = after; }
+          name.placeholder = after;
           it.color = pick.value;
           changed();
         });
-        append(box, h('div', { class: 'swatch-item' }, pick,
-          h('div', { class: 'pair' },
-            h('label', { class: 'lang' }, h('span', { class: 'tag' }, 'EN'), names[0]),
-            h('label', { class: 'lang bn' }, h('span', { class: 'tag' }, 'বাং'), names[1])),
+        append(box, h('div', { class: 'swatch-item' }, pick, name,
           h('button', { type: 'button', class: 'icon-btn del', 'aria-label': 'Remove colour', onclick: () => { arr.splice(i, 1); changed(); draw(); } }, '✕')));
       });
       if (arr.length < 8) append(box, h('button', { type: 'button', class: 'btn ghost sm', onclick: () => { arr.push(newSwatch('#c8a25c')); setPath(st.content, path, arr); changed(); draw(); } }, '+ Add colour'));
@@ -582,7 +561,7 @@
       fields: [
         { k: 'couple.name1', t: 'i18n', label: 'First name (shown on top)' },
         { k: 'couple.name2', t: 'i18n', label: 'Second name' },
-        { k: 'couple.joiner', t: 'i18n', label: 'Between the names', help: 'Usually & in English and ও in Bangla' },
+        { k: 'couple.joiner', t: 'i18n', label: 'Between the names', help: 'Usually &' },
         { k: 'hero.bismillah', t: 'toggle', label: 'Show Bismillah at the top', help: 'بسم الله الرحمن الرحيم in Arabic calligraphy, above everything on the first page.' },
         { k: 'hero.topLine', t: 'i18n', label: 'Small line above the names' },
         { k: 'hero.invitation', t: 'i18nLong', label: 'Invitation line under the names', rows: 2 },
@@ -604,7 +583,7 @@
           k: 'events.items', t: 'list', label: 'Events', addLabel: '+ Add an event',
           itemTitle: (it, i) => enText(it.name) || `Event ${i + 1}`,
           badge: (it) => (it.main ? 'Main day' : ''),
-          newItem: () => ({ main: false, name: { en: 'New event', bn: '' }, date: '', time: '18:00', venue: { en: '', bn: '' }, address: { en: '', bn: '' }, note: { en: '', bn: '' }, mapLink: '' }),
+          newItem: () => ({ main: false, name: { en: 'New event' }, date: '', time: '18:00', venue: { en: '' }, address: { en: '' }, note: { en: '' }, mapLink: '' }),
           fields: [
             { k: 'name', t: 'i18n', label: 'Event name' },
             { k: 'date', t: 'date', label: 'Date' },
@@ -676,7 +655,7 @@
         {
           k: 'menu.items', t: 'list', label: 'Courses', addLabel: '+ Add a course',
           itemTitle: (it, i) => enText(it.course) || `Course ${i + 1}`,
-          newItem: () => ({ course: { en: 'New course', bn: '' }, dishes: { en: '', bn: '' } }),
+          newItem: () => ({ course: { en: 'New course' }, dishes: { en: '' } }),
           fields: [
             { k: 'course', t: 'i18n', label: 'Course name' },
             { k: 'dishes', t: 'i18nLong', label: 'Dishes', rows: 2, help: 'Separate dishes with · or a new line.' }
@@ -745,7 +724,7 @@
           k: 'custom.items', t: 'list', addLabel: '+ Add a section',
           itemTitle: (it, i) => enText(it.title) || `Extra section ${i + 1}`,
           badge: (it) => (it.show === false ? 'Off' : ''),
-          newItem: () => ({ id: Date.now().toString(36), show: true, eyebrow: { en: '', bn: '' }, title: { en: 'Good to Know', bn: 'জেনে রাখুন' }, heading: { en: '', bn: '' }, text: { en: 'Write anything you want guests to know here.', bn: '' }, image: '', buttonText: { en: '', bn: '' }, buttonLink: '' }),
+          newItem: () => ({ id: Date.now().toString(36), show: true, eyebrow: { en: '' }, title: { en: 'Good to Know' }, heading: { en: '' }, text: { en: 'Write anything you want guests to know here.' }, image: '', buttonText: { en: '' }, buttonLink: '' }),
           onAdd: () => { st.content.settings.sectionOrder = currentOrder(); refill('order'); },
           onRemove: (it) => { st.content.settings.sectionOrder = currentOrder().filter((k) => k !== 'custom:' + it.id); refill('order'); },
           fields: [
@@ -762,7 +741,6 @@
       ]
     },
     { id: 'music', ic: '♪', title: 'Music', desc: 'Background song that starts when the curtain opens', custom: renderMusic },
-    { id: 'language', ic: 'অ', title: 'Language', desc: 'English, বাংলা, or both', custom: renderLanguage },
     { id: 'share', ic: '🔗', title: 'Link preview', desc: 'What people see when the link is shared on WhatsApp or Facebook', custom: renderShare }
   ];
 
@@ -822,17 +800,6 @@
       fRange({ label: 'Volume', min: 0.1, max: 1, step: 0.05, def: 0.6 }, 'settings.music.volume'));
   }
 
-  function renderLanguage() {
-    const showBn = h('input', { type: 'checkbox', checked: st.showBn });
-    showBn.addEventListener('change', () => { st.showBn = showBn.checked; LS.set('inv-showbn', st.showBn); document.body.classList.toggle('no-bn', !st.showBn); });
-    return h('div', null,
-      fSelect({ label: 'Language guests see first', options: [['en', 'English'], ['bn', 'বাংলা (Bangla)']] }, 'settings.defaultLanguage'),
-      fToggle({ label: 'Show the EN / বাং switch button', help: 'Guests can switch language with the round button at the top right.' }, 'settings.showLanguageSwitch'),
-      fI18n({ label: 'Text on the switch button', help: 'English side is shown while the page is in English, so it usually says বাং.' }, 'labels.language'),
-      h('div', { class: 'f show-row' }, h('label', { class: 'switch' }, h('span', null, 'Show Bangla boxes in this editor'), showBn, h('span', { class: 'knob' }))),
-      h('p', { class: 'f-help' }, 'If a Bangla box is empty, the English text is used in its place.'));
-  }
-
   function customItems() { return (st.content.custom && Array.isArray(st.content.custom.items)) ? st.content.custom.items : []; }
   function currentOrder() {
     const s = st.content.settings;
@@ -885,8 +852,8 @@
     const W = 1200, H = 630;
     cv.width = W; cv.height = H;
     const ctx = cv.getContext('2d');
-    const c = st.content, col = c.settings.colors, lang = c.settings.defaultLanguage === 'bn' ? 'bn' : 'en';
-    const t = (v) => S.tr(v, lang);
+    const c = st.content, col = c.settings.colors;
+    const t = (v) => S.tr(v, 'en');
     ctx.fillStyle = col.background; ctx.fillRect(0, 0, W, H);
     S.paintCurtains(ctx, W, H, 1, { curtain: col.curtain, curtainLines: col.curtainLines, gold: col.gold }, { slice: 1 }, 1);
     ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
@@ -895,10 +862,31 @@
       if ('letterSpacing' in ctx) { ctx.letterSpacing = spacing + 'px'; ctx.fillText(txt, W / 2 + spacing / 2, y, 900); ctx.letterSpacing = '0px'; }
       else ctx.fillText(txt, W / 2, y, 900);
     };
-    const serif = lang === 'bn' ? '"Noto Serif Bengali", serif' : '"Cormorant Garamond", Georgia, serif';
-    const script = lang === 'bn' ? '"Galada", "Pinyon Script", cursive' : '"Pinyon Script", "Galada", cursive';
-    const top = t(c.hero.topLine);
-    if (top) spaced(lang === 'bn' ? top : top.toUpperCase(), `600 ${lang === 'bn' ? 26 : 22}px ${serif}`, 178, col.muted, lang === 'bn' ? 0 : 6);
+    const serif = '"Cormorant Garamond", "Noto Serif Bengali", Georgia, serif';
+    const script = '"Pinyon Script", "Galada", cursive';
+    const spacedWidth = (txt, size, spacing) => {
+      ctx.font = `600 ${size}px ${serif}`;
+      if (!('letterSpacing' in ctx)) return ctx.measureText(txt).width;
+      ctx.letterSpacing = spacing + 'px';
+      const w = ctx.measureText(txt).width;
+      ctx.letterSpacing = '0px';
+      return w;
+    };
+    // the line above the names: one line if it fits between the curtains, otherwise two balanced lines
+    const top = t(c.hero.topLine).toUpperCase();
+    if (top && spacedWidth(top, 22, 6) <= 740) spaced(top, `600 22px ${serif}`, 178, col.muted, 6);
+    else if (top) {
+      const words = top.split(' ');
+      let cut = 1, diff = Infinity;
+      for (let i = 1; i < words.length; i++) {
+        const d = Math.abs(words.slice(0, i).join(' ').length - words.slice(i).join(' ').length);
+        if (d < diff) { diff = d; cut = i; }
+      }
+      const lines = [words.slice(0, cut).join(' '), words.slice(cut).join(' ')];
+      let size = 22;
+      while (size > 14 && Math.max(...lines.map((l) => spacedWidth(l, size, 5))) > 700) size--;
+      lines.forEach((l, i) => spaced(l, `600 ${size}px ${serif}`, 142 + i * (size + 12), col.muted, 5));
+    }
     // names on one line if they fit at a good size, otherwise on two lines, always inside the card
     const fitFont = (txt, size, min, maxW) => {
       ctx.font = `${size}px ${script}`;
@@ -908,11 +896,11 @@
     const joiner = t(c.couple.joiner) || '&';
     const names = `${t(c.couple.name1)} ${joiner} ${t(c.couple.name2)}`;
     ctx.fillStyle = col.accent;
-    if (fitFont(names, lang === 'bn' ? 96 : 118, 72, 860) > 72 || ctx.measureText(names).width <= 860) {
+    if (fitFont(names, 118, 72, 860) > 72 || ctx.measureText(names).width <= 860) {
       ctx.fillText(names, W / 2, 330, 900);
     } else {
       const lines = [`${t(c.couple.name1)} ${joiner}`, t(c.couple.name2)];
-      const size = Math.min(...lines.map((l) => fitFont(l, lang === 'bn' ? 80 : 92, 30, 860)));
+      const size = Math.min(...lines.map((l) => fitFont(l, 92, 30, 860)));
       ctx.font = `${size}px ${script}`;
       ctx.fillText(lines[0], W / 2, 268, 900);
       ctx.fillText(lines[1], W / 2, 268 + size * 0.95, 900);
@@ -920,10 +908,10 @@
     const ev = S.mainEvent(c);
     if (ev && ev.date) {
       ctx.font = `italic 36px ${serif}`; ctx.fillStyle = col.text;
-      ctx.fillText(S.formatDateLong(ev.date, lang), W / 2, 418, 900);
+      ctx.fillText(S.formatDateLong(ev.date, 'en'), W / 2, 418, 900);
     }
     const inv = t(c.intro.youAreInvited);
-    if (inv) spaced(lang === 'bn' ? inv : inv.toUpperCase(), `600 ${lang === 'bn' ? 26 : 21}px ${serif}`, 492, col.accent, lang === 'bn' ? 0 : 7);
+    if (inv) spaced(inv.toUpperCase(), `600 21px ${serif}`, 492, col.accent, 7);
     return cv;
   }
   const shareCanvasOpen = () => !!$('.grp[data-id="share"][open] canvas');
@@ -1076,21 +1064,19 @@
   /* ---------- guest links ---------- */
   function renderGuests() {
     const pane = $('#pane-guests');
-    const saved = LS.get('inv-guests', { names: '', lang: '', msg: '' });
+    const saved = LS.get('inv-guests', { names: '', msg: '' });
     const defMsg = 'Dear {name}, with great joy we invite you to our wedding. Please open your invitation here: {link}';
     const names = h('textarea', { class: 'in-area', rows: 6, placeholder: 'Rahim Uncle\nNadia Apu\nThe Chowdhury Family', value: saved.names || '' });
     const msg = h('textarea', { class: 'in-area', rows: 3, value: saved.msg || defMsg });
-    const lang = h('select', null, h('option', { value: '' }, 'Guest\'s last choice / default'), h('option', { value: 'en' }, 'English'), h('option', { value: 'bn' }, 'বাংলা'));
-    lang.value = saved.lang || '';
     const out = h('div');
     const base = siteUrl();
-    const linkFor = (n) => base + '?to=' + encodeURIComponent(n).replace(/%20/g, '+') + (lang.value ? '&lang=' + lang.value : '');
+    const linkFor = (n) => base + '?to=' + encodeURIComponent(n).replace(/%20/g, '+');
     const copy = async (text) => {
       try { await navigator.clipboard.writeText(text); toast('Copied'); }
       catch (e) { const ta = h('textarea', { value: text, style: 'position:fixed;opacity:0' }); document.body.append(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast('Copied'); }
     };
     const build = () => {
-      LS.set('inv-guests', { names: names.value, lang: lang.value, msg: msg.value });
+      LS.set('inv-guests', { names: names.value, msg: msg.value });
       out.innerHTML = '';
       const list = names.value.split('\n').map((x) => x.trim()).filter(Boolean);
       if (!list.length) { append(out, h('p', { class: 'f-help' }, 'Type guest names above, one per line.')); return; }
@@ -1106,7 +1092,6 @@
     };
     const deb = debounce(build, 250);
     [names, msg].forEach((x) => x.addEventListener('input', deb));
-    lang.addEventListener('change', build);
     pane.innerHTML = '';
     append(pane, [
       h('div', { class: 'card' },
@@ -1119,7 +1104,6 @@
         h('p', null, 'Each guest sees their own name on the curtain, like "Dear Rahim Uncle". Their name is also filled into the RSVP form.'),
         h('div', { class: 'f' }, h('span', { class: 'f-label' }, 'Guest names, one per line'), names),
         h('div', { class: 'f' }, h('span', { class: 'f-label' }, 'Message to send with the link'), msg, h('p', { class: 'f-help' }, '{name} and {link} are filled in for each guest.')),
-        h('div', { class: 'f' }, h('span', { class: 'f-label' }, 'Open the invitation in'), lang),
         h('div', { style: 'margin-top:12px' }, out))
     ]);
     build();
@@ -1234,9 +1218,6 @@
       $('#banner').hidden = true;
     }
     st.dirty = JSON.stringify(st.content) !== st.base;
-    document.body.classList.toggle('no-bn', !st.showBn);
-    st.pvLang = st.content.settings.defaultLanguage === 'bn' ? 'bn' : 'en';
-    $$('#pvLang button').forEach((x) => x.classList.toggle('on', x.dataset.lang === st.pvLang));
     renderForm();
     updateStatus();
     sendPreview();
