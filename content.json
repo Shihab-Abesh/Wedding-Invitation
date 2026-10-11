@@ -73,6 +73,7 @@
     }
   },
   "hero": {
+    "bismillah": true,
     "topLine": {
       "en": "Together with their families",
       "bn": "পরিবারের দোয়া ও আশীর্বাদে"
@@ -332,10 +333,34 @@
       "bn": "পছন্দের রং"
     },
     "colors": [
-      "#8e1b24",
-      "#b8323a",
-      "#c8a25c",
-      "#efe2cc"
+      {
+        "color": "#8e1b24",
+        "name": {
+          "en": "Maroon",
+          "bn": "মেরুন"
+        }
+      },
+      {
+        "color": "#b8323a",
+        "name": {
+          "en": "Red",
+          "bn": "লাল"
+        }
+      },
+      {
+        "color": "#c8a25c",
+        "name": {
+          "en": "Gold",
+          "bn": "সোনালি"
+        }
+      },
+      {
+        "color": "#efe2cc",
+        "name": {
+          "en": "Ivory",
+          "bn": "আইভরি"
+        }
+      }
     ]
   },
   "gifts": {

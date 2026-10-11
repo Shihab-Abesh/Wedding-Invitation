@@ -45,6 +45,7 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  overflow-wrap: break-word; /* a word too long for the screen breaks instead of being cut off */
   -webkit-tap-highlight-color: transparent;
 }
 body { /* soft paper grain, scrolls with the page so it costs nothing per frame */
@@ -83,7 +84,7 @@ body.opening .seal-wrap, body.opened .seal-wrap { opacity: 0; transform: scale(1
   animation: pulse 2.4s ease-out infinite;
 }
 .seal svg { width: 100%; height: 100%; display: block; overflow: visible; }
-.guest-note, .tap-hint { color: var(--curtain-lines); text-shadow: 0 1px 8px rgba(0,0,0,.45); text-align: center; }
+.guest-note, .tap-hint { max-width: 100%; color: var(--curtain-lines); text-shadow: 0 1px 8px rgba(0,0,0,.45); text-align: center; }
 .guest-note { font-family: var(--script); font-size: clamp(26px, 8vw, 36px); line-height: 1.15; }
 .guest-note small { display: block; font-family: var(--serif); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; margin-top: 4px; }
 .tap-hint { font-size: 12px; letter-spacing: .3em; text-transform: uppercase; font-weight: 600; animation: breathe 2.4s ease-in-out infinite; }
@@ -95,8 +96,10 @@ html[lang="bn"] .tap-hint, html[lang="bn"] .guest-note small { letter-spacing: .
   text-align: center;
   padding: calc(var(--safe-t) + 8svh) 21vw calc(var(--safe-b) + 12svh);
 }
-.hero-inner > * { opacity: 0; transform: translateY(14px); transition: opacity 1.2s ease, transform 1.2s ease; transition-delay: var(--d, 0s); }
+.hero-inner > * { max-width: 100%; opacity: 0; transform: translateY(14px); transition: opacity 1.2s ease, transform 1.2s ease; transition-delay: var(--d, 0s); }
 body.opened .hero-inner > * { opacity: 1; transform: none; }
+.hero .bismillah { width: clamp(140px, min(44vw, 23svh), 230px); margin: 0 auto clamp(12px, 2.6svh, 24px); color: var(--gold); }
+.hero .bismillah svg { display: block; width: 100%; height: auto; fill: currentColor; }
 .hero .greet { font-style: italic; font-size: clamp(16px, 4.6vw, 20px); color: var(--muted); margin: 0 0 6px; }
 .hero .top-line, .eyebrow {
   font-size: clamp(10.5px, 2.9vw, 12.5px); font-weight: 600; letter-spacing: .26em; text-transform: uppercase;
@@ -105,6 +108,7 @@ body.opened .hero-inner > * { opacity: 1; transform: none; }
 html[lang="bn"] .hero .top-line, html[lang="bn"] .eyebrow { letter-spacing: .02em; font-size: clamp(12.5px, 3.5vw, 14.5px); font-weight: 500; }
 .names { margin: clamp(10px, 2.4svh, 22px) 0; font-family: var(--script); color: var(--accent); font-weight: 400; line-height: 1; }
 .names .n { display: block; font-size: clamp(46px, min(16vw, 9.5svh), 92px); white-space: nowrap; }
+.names .n.wrap { white-space: normal; overflow-wrap: anywhere; line-height: 1.1; }
 .names .amp { display: block; font-size: clamp(28px, min(9vw, 5.5svh), 52px); margin: -.05em 0 .02em; opacity: .9; }
 html[lang="bn"] .names .n { font-size: clamp(40px, min(13.5vw, 8svh), 80px); line-height: 1.25; }
 .hero .invite {
@@ -152,7 +156,7 @@ html[lang="bn"] .lead { font-style: normal; font-size: clamp(15px, 4.2vw, 17px);
   background: radial-gradient(circle at 50% 40%, var(--card), rgba(var(--gold-rgb), .12));
   box-shadow: inset 0 0 0 1px rgba(var(--gold-rgb), .45);
 }
-.scratch .val { font-size: clamp(21px, 6.4vw, 28px); font-weight: 600; color: var(--accent); line-height: 1.1; padding: 0 6px; }
+.scratch .val { max-width: 100%; font-size: clamp(21px, 6.4vw, 28px); font-weight: 600; color: var(--accent); line-height: 1.1; padding: 0 6px; }
 html[lang="bn"] .scratch .val { font-size: clamp(15px, 4.6vw, 20px); font-weight: 500; }
 .scratch canvas { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; touch-action: none; cursor: grab; transition: opacity .7s ease, transform .7s ease; filter: drop-shadow(0 3px 6px rgba(0,0,0,.18)); }
 .scratch.done canvas { opacity: 0; transform: scale(1.15); pointer-events: none; }
@@ -178,6 +182,7 @@ html[lang="bn"] .countdown b { font-size: clamp(26px, 8vw, 38px); }
 html[lang="bn"] .families .fam-label { font-size: 22px; }
 .families .fam-name { font-size: clamp(17px, 4.8vw, 19px); margin: 2px 0 0; }
 .families .fam-amp { font-family: var(--script); color: var(--gold); font-size: 30px; line-height: 1; }
+.families > div { min-width: 0; }
 @media (min-width: 440px) { .families { grid-template-columns: 1fr auto 1fr; align-items: center; } }
 
 /* --- Photo --- */
@@ -228,7 +233,7 @@ html[lang="bn"] .menu-course p { font-style: normal; font-size: 15px; line-heigh
 /* --- Buttons --- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  min-height: 48px; padding: 12px 24px; margin-top: 22px;
+  min-height: 48px; max-width: 100%; padding: 12px 24px; margin-top: 22px;
   border-radius: 999px; border: 1px solid var(--accent);
   background: var(--accent); color: var(--btn-text);
   font-family: var(--serif); font-size: 12.5px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
@@ -244,9 +249,12 @@ html[lang="bn"] .btn { letter-spacing: 0; font-size: 15px; font-weight: 600; }
 /* --- Dress code --- */
 .dress-heading { font-size: clamp(13px, 3.6vw, 14.5px); letter-spacing: .26em; text-transform: uppercase; color: var(--accent); font-weight: 700; margin: 4px 0 0; }
 html[lang="bn"] .dress-heading { letter-spacing: 0; font-size: 17px; }
-.swatches { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin: 18px 0 6px; }
-.swatches i { width: clamp(38px, 11vw, 48px); aspect-ratio: 1; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), 0 0 0 4px var(--card), 0 0 0 5px rgba(var(--gold-rgb), .5); }
-.swatch-label { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-top: 12px; }
+.swatches { display: flex; justify-content: center; flex-wrap: wrap; gap: 18px 8px; margin: 16px 0 6px; }
+.swatch { width: clamp(64px, 19vw, 82px); display: flex; flex-direction: column; align-items: center; gap: 13px; }
+.swatch i { width: clamp(38px, 11vw, 48px); aspect-ratio: 1; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0,0,0,.08), 0 0 0 4px var(--card), 0 0 0 5px rgba(var(--gold-rgb), .5); }
+.swatch span { max-width: 100%; font-style: italic; font-size: clamp(15px, 4.2vw, 17px); line-height: 1.2; color: var(--text); }
+html[lang="bn"] .swatch span { font-style: normal; font-size: 14px; line-height: 1.45; }
+.swatch-label { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin: 26px 0 0; }
 html[lang="bn"] .swatch-label { letter-spacing: 0; font-size: 14px; }
 
 /* --- Gifts --- */

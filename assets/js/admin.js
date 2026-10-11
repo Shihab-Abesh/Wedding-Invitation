@@ -95,7 +95,7 @@
   async function gh(path, opts) {
     opts = opts || {};
     const g = st.gh;
-    const url = `https://api.github.com/repos/${encodeURIComponent(g.owner)}/${encodeURIComponent(g.repo)}${path}`;
+    const url = opts.root ? `https://api.github.com${path}` : `https://api.github.com/repos/${encodeURIComponent(g.owner)}/${encodeURIComponent(g.repo)}${path}`;
     const headers = { Accept: 'application/vnd.github+json', Authorization: `Bearer ${g.token.trim()}`, 'X-GitHub-Api-Version': '2022-11-28' };
     if (opts.body) headers['Content-Type'] = 'application/json';
     const r = await fetch(url, { method: opts.method || 'GET', headers, body: opts.body ? JSON.stringify(opts.body) : undefined, cache: 'no-store' });
@@ -111,11 +111,66 @@
   function friendlyError(e) {
     if (!navigator.onLine) return 'You seem to be offline. Check your internet and try again.';
     if (e.status === 401) return 'GitHub did not accept the token. It may be wrong or expired. Make a new one in Setup.';
-    if (e.status === 403) return 'The token is not allowed to change this repository. Give it "Contents: Read and write" access in Setup.';
+    if (e.status === 429 || /rate limit/i.test(e.message)) return 'GitHub is limiting requests for a few minutes. Please wait a little and try again.';
+    if (e.status === 403 && /archived/i.test(e.message)) return 'This repository is archived, so it is read-only. Unarchive it on GitHub (repository Settings, at the bottom) and try again.';
+    if (e.status === 403) return 'The token is not allowed to change this repository. Open Setup and press "Save & check" to see exactly what to fix.';
     if (e.status === 404) return 'Repository not found. Check the username and repository name in Setup, and that the token can access that repository.';
     if (e.status === 409 || e.status === 422) return 'GitHub was busy with another change. Please press Publish again.';
     return 'Something went wrong: ' + (e.message || e);
   }
+  /* GitHub only answers "403" when a token can't publish. This finds out which setting is
+     wrong so Setup can say exactly what to change. */
+  const lower = (s) => String(s || '').toLowerCase();
+  const classicTokenUrl = (priv) => `https://github.com/settings/tokens/new?scopes=${priv ? 'repo' : 'public_repo'}&description=${encodeURIComponent('Wedding invitation editor')}`;
+  async function checkAccess() {
+    let me = null;
+    try { me = await gh('/user', { root: true }); } catch (e) { if (e.status === 401) throw e; }
+    let info;
+    try { info = await gh(''); } catch (e) {
+      if (e.status === 404 && me && lower(me.login) !== lower(st.gh.owner)) e.problem = { kind: 'account', me: me.login };
+      throw e;
+    }
+    // a real write test: makes an unused blob (no commit, nothing visible) exactly like Publish does
+    try {
+      await gh('/git/blobs', { method: 'POST', body: { content: 'Wedding editor access check', encoding: 'utf-8' } });
+    } catch (e) {
+      if ((e.status === 403 || e.status === 404) && !/rate limit|archived/i.test(e.message)) {
+        e.status = 403;
+        e.problem = me && lower(me.login) !== lower(info.owner.login)
+          ? { kind: 'account', me: me.login }
+          : { kind: /^github_pat_/.test(st.gh.token.trim()) ? 'fine' : 'classic', priv: info.private };
+      }
+      throw e;
+    }
+    return info;
+  }
+  function accessHelp(p) {
+    const owner = S.esc(st.gh.owner), repo = S.esc(st.gh.repo);
+    const oneClick = h('div', { class: 'btns', style: 'margin-top:10px' },
+      h('a', { class: 'btn primary sm', href: classicTokenUrl(p.priv), target: '_blank', rel: 'noopener' }, 'Make a new token (1 click)'));
+    if (p.kind === 'account') {
+      return h('div', { class: 'problem' },
+        h('b', null, 'This token belongs to a different GitHub account.'),
+        h('p', { html: `It was made by <b>@${S.esc(p.me)}</b>, but the repository belongs to <b>@${owner}</b>, so it can't change it. On GitHub, sign out, sign in as <b>@${owner}</b>, make the token there and paste it above.` }));
+    }
+    if (p.kind === 'classic') {
+      return h('div', { class: 'problem' },
+        h('b', null, 'This token is missing the "repo" permission.'),
+        h('p', null, 'Make a new one with the button below. The right box is already ticked: choose an expiry date after the wedding, press Generate token at the bottom, copy the token and paste it above.'),
+        oneClick);
+    }
+    return h('div', { class: 'problem' },
+      h('b', null, 'This token can read the repository but is not allowed to change it.'),
+      h('p', null, 'Fix it on GitHub. The token text stays the same, so you don\'t need to paste it again:'),
+      h('ol', { class: 'steps' },
+        h('li', { html: 'Open <a href="https://github.com/settings/personal-access-tokens" target="_blank" rel="noopener">github.com/settings/personal-access-tokens</a>, tap your token, then tap <b>Edit</b>.' }),
+        h('li', { html: `<b>Repository access:</b> choose <i>Only select repositories</i> and pick <b>${repo}</b>. The <i>Public repositories</i> option can only read.` }),
+        h('li', { html: '<b>Permissions:</b> find <b>Contents</b> (tap <i>Add permissions</i> if it isn\'t listed) and change <i>Read-only</i> to <b>Read and write</b>.' }),
+        h('li', { html: 'Tap <b>Update</b>, come back here and press <b>Save &amp; check</b> again.' })),
+      h('p', null, 'Or skip all that and make a simple token instead: the right box is already ticked, just pick an expiry date and press Generate token.'),
+      oneClick);
+  }
+
   function b64ToUtf8(b64) {
     const bin = atob(String(b64).replace(/\s/g, ''));
     const bytes = new Uint8Array(bin.length);
@@ -193,11 +248,11 @@
   $('#replayBtn').addEventListener('click', () => { if (pv.contentWindow) pv.contentWindow.postMessage({ type: 'replay' }, location.origin); });
 
   /* ---------- tabs ---------- */
-  function setTab(tab) {
+  function setTab(tab, checkNow) {
     $('#layout').dataset.tab = tab;
     $$('#tabs button').forEach((b) => b.classList.toggle('on', b.dataset.tab === tab));
     if (tab === 'guests') renderGuests();
-    if (tab === 'setup') renderSetup();
+    if (tab === 'setup') renderSetup(checkNow === true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   $$('#tabs button').forEach((b) => b.addEventListener('click', () => setTab(b.dataset.tab)));
@@ -388,17 +443,39 @@
     return wrap(f, box);
   }
 
+  /* colour swatches with a name each: { color, name: { en, bn } } */
+  const newSwatch = (hex) => ({ color: hex, name: S.colorName(hex) });
   function fColorList(f, path) {
     const box = h('div', { class: 'swatch-list' });
     const draw = () => {
       box.innerHTML = '';
       const arr = getPath(st.content, path) || [];
-      arr.forEach((c, i) => {
-        const pick = h('input', { type: 'color', value: normHex(c), 'aria-label': 'Colour ' + (i + 1) });
-        pick.addEventListener('input', () => { arr[i] = pick.value; changed(); });
-        append(box, h('div', { class: 'swatch-item' }, pick, h('button', { type: 'button', 'aria-label': 'Remove colour', onclick: () => { arr.splice(i, 1); changed(); draw(); } }, '×')));
+      arr.forEach((it, i) => {
+        if (!it.name || typeof it.name !== 'object') it.name = { en: '', bn: '' };
+        const auto = S.colorName(it.color);
+        const names = ['en', 'bn'].map((lang) => h('input', {
+          class: 'in', type: 'text', lang, dir: 'auto', value: it.name[lang] || '', placeholder: auto[lang],
+          'aria-label': `Colour ${i + 1} name (${lang === 'bn' ? 'Bangla' : 'English'})`,
+          oninput: (e) => { it.name[lang] = e.target.value; changed(); }
+        }));
+        const pick = h('input', { type: 'color', value: normHex(it.color), 'aria-label': 'Colour ' + (i + 1) });
+        pick.addEventListener('input', () => {
+          // names that were filled in automatically follow the colour; typed ones stay
+          const before = S.colorName(it.color), after = S.colorName(pick.value);
+          ['en', 'bn'].forEach((lang, k) => {
+            if (!it.name[lang] || it.name[lang] === before[lang]) { it.name[lang] = after[lang]; names[k].value = after[lang]; }
+            names[k].placeholder = after[lang];
+          });
+          it.color = pick.value;
+          changed();
+        });
+        append(box, h('div', { class: 'swatch-item' }, pick,
+          h('div', { class: 'pair' },
+            h('label', { class: 'lang' }, h('span', { class: 'tag' }, 'EN'), names[0]),
+            h('label', { class: 'lang bn' }, h('span', { class: 'tag' }, 'বাং'), names[1])),
+          h('button', { type: 'button', class: 'icon-btn del', 'aria-label': 'Remove colour', onclick: () => { arr.splice(i, 1); changed(); draw(); } }, '✕')));
       });
-      if (arr.length < 8) append(box, h('button', { type: 'button', class: 'btn ghost sm', onclick: () => { arr.push('#c8a25c'); setPath(st.content, path, arr); changed(); draw(); } }, '+ Add colour'));
+      if (arr.length < 8) append(box, h('button', { type: 'button', class: 'btn ghost sm', onclick: () => { arr.push(newSwatch('#c8a25c')); setPath(st.content, path, arr); changed(); draw(); } }, '+ Add colour'));
     };
     draw();
     return wrap(f, box);
@@ -506,6 +583,7 @@
         { k: 'couple.name1', t: 'i18n', label: 'First name (shown on top)' },
         { k: 'couple.name2', t: 'i18n', label: 'Second name' },
         { k: 'couple.joiner', t: 'i18n', label: 'Between the names', help: 'Usually & in English and ও in Bangla' },
+        { k: 'hero.bismillah', t: 'toggle', label: 'Show Bismillah at the top', help: 'بسم الله الرحمن الرحيم in Arabic calligraphy, above everything on the first page.' },
         { k: 'hero.topLine', t: 'i18n', label: 'Small line above the names' },
         { k: 'hero.invitation', t: 'i18nLong', label: 'Invitation line under the names', rows: 2 },
         { k: 'intro.tapHint', t: 'i18n', label: 'Text on the closed curtain' },
@@ -612,8 +690,8 @@
         { k: 'dressCode.title', t: 'i18n', label: 'Title' },
         { k: 'dressCode.heading', t: 'i18n', label: 'Short heading' },
         { k: 'dressCode.text', t: 'i18nLong', label: 'Description' },
-        { k: 'dressCode.colors', t: 'colors', label: 'Suggested colours', help: 'Tap a circle to change it, × to remove.' },
-        { k: 'dressCode.colorsLabel', t: 'i18n', label: 'Label under the colours' }
+        { k: 'dressCode.colorsLabel', t: 'i18n', label: 'Label above the colours' },
+        { k: 'dressCode.colors', t: 'colors', label: 'Suggested colours', help: 'Tap a circle to change the colour. Its name is filled in for you and shown under the circle; type your own name to change it. ✕ removes a colour.' }
       ]
     },
     {
@@ -814,22 +892,35 @@
     ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     const spaced = (txt, font, y, color, spacing) => {
       ctx.font = font; ctx.fillStyle = color;
-      if ('letterSpacing' in ctx) { ctx.letterSpacing = spacing + 'px'; ctx.fillText(txt, W / 2 + spacing / 2, y); ctx.letterSpacing = '0px'; }
-      else ctx.fillText(txt, W / 2, y);
+      if ('letterSpacing' in ctx) { ctx.letterSpacing = spacing + 'px'; ctx.fillText(txt, W / 2 + spacing / 2, y, 900); ctx.letterSpacing = '0px'; }
+      else ctx.fillText(txt, W / 2, y, 900);
     };
     const serif = lang === 'bn' ? '"Noto Serif Bengali", serif' : '"Cormorant Garamond", Georgia, serif';
     const script = lang === 'bn' ? '"Galada", "Pinyon Script", cursive' : '"Pinyon Script", "Galada", cursive';
     const top = t(c.hero.topLine);
     if (top) spaced(lang === 'bn' ? top : top.toUpperCase(), `600 ${lang === 'bn' ? 26 : 22}px ${serif}`, 178, col.muted, lang === 'bn' ? 0 : 6);
-    const names = `${t(c.couple.name1)} ${t(c.couple.joiner) || '&'} ${t(c.couple.name2)}`;
-    let size = lang === 'bn' ? 96 : 118;
-    ctx.font = `${size}px ${script}`;
-    while (ctx.measureText(names).width > 860 && size > 50) { size -= 4; ctx.font = `${size}px ${script}`; }
-    ctx.fillStyle = col.accent; ctx.fillText(names, W / 2, 330);
+    // names on one line if they fit at a good size, otherwise on two lines, always inside the card
+    const fitFont = (txt, size, min, maxW) => {
+      ctx.font = `${size}px ${script}`;
+      while (ctx.measureText(txt).width > maxW && size > min) { size -= 2; ctx.font = `${size}px ${script}`; }
+      return size;
+    };
+    const joiner = t(c.couple.joiner) || '&';
+    const names = `${t(c.couple.name1)} ${joiner} ${t(c.couple.name2)}`;
+    ctx.fillStyle = col.accent;
+    if (fitFont(names, lang === 'bn' ? 96 : 118, 72, 860) > 72 || ctx.measureText(names).width <= 860) {
+      ctx.fillText(names, W / 2, 330, 900);
+    } else {
+      const lines = [`${t(c.couple.name1)} ${joiner}`, t(c.couple.name2)];
+      const size = Math.min(...lines.map((l) => fitFont(l, lang === 'bn' ? 80 : 92, 30, 860)));
+      ctx.font = `${size}px ${script}`;
+      ctx.fillText(lines[0], W / 2, 268, 900);
+      ctx.fillText(lines[1], W / 2, 268 + size * 0.95, 900);
+    }
     const ev = S.mainEvent(c);
     if (ev && ev.date) {
       ctx.font = `italic 36px ${serif}`; ctx.fillStyle = col.text;
-      ctx.fillText(S.formatDateLong(ev.date, lang), W / 2, 418);
+      ctx.fillText(S.formatDateLong(ev.date, lang), W / 2, 418, 900);
     }
     const inv = t(c.intro.youAreInvited);
     if (inv) spaced(lang === 'bn' ? inv : inv.toUpperCase(), `600 ${lang === 'bn' ? 26 : 21}px ${serif}`, 492, col.accent, lang === 'bn' ? 0 : 7);
@@ -957,6 +1048,7 @@
       note.innerHTML = '';
       append(note, h('span', { class: 'err-text' }, friendlyError(e)));
       closeBtn.hidden = false;
+      if ([401, 403, 404].includes(e.status)) append(closeBtn.parentNode, h('button', { type: 'button', class: 'btn primary', onclick: () => { modal(null); setTab('setup', true); } }, 'Fix in Setup'));
     }
   }
   async function waitForLive(snapshot) {
@@ -1034,14 +1126,14 @@
   }
 
   /* ---------- setup ---------- */
-  function renderSetup() {
+  function renderSetup(checkNow) {
     const pane = $('#pane-setup');
     const g = st.gh;
     const owner = h('input', { type: 'text', value: g.owner, placeholder: 'your-github-username', autocapitalize: 'off', spellcheck: 'false' });
     const repo = h('input', { type: 'text', value: g.repo, placeholder: 'wedding-invitation', autocapitalize: 'off', spellcheck: 'false' });
     const branch = h('input', { type: 'text', value: g.branch || 'main', autocapitalize: 'off', spellcheck: 'false' });
-    const token = h('input', { type: 'password', value: g.token, placeholder: 'github_pat_…', autocomplete: 'off', spellcheck: 'false' });
-    const result = h('p', { class: 'f-help' }, connected() ? 'Saved on this device.' : '');
+    const token = h('input', { type: 'password', value: g.token, placeholder: 'github_pat_… or ghp_…', autocomplete: 'off', spellcheck: 'false' });
+    const result = h('div', { class: 'f-help' }, connected() ? 'Saved on this device.' : '');
     const save = async () => {
       st.gh = { owner: owner.value.trim(), repo: repo.value.trim().replace(/\.git$/, ''), branch: branch.value.trim() || 'main', token: token.value.trim() };
       LS.set('inv-gh', st.gh);
@@ -1049,11 +1141,13 @@
       if (!connected()) { result.innerHTML = '<span class="err-text">Fill in all fields first.</span>'; return; }
       result.textContent = 'Checking…';
       try {
-        const info = await gh('');
-        if (info.permissions && info.permissions.push === false) throw Object.assign(new Error('no push'), { status: 403 });
-        result.innerHTML = '<span class="ok-text">Connected to ' + S.esc(info.full_name) + '. You can publish now.</span>';
+        const info = await checkAccess();
+        result.innerHTML = '<span class="ok-text">Connected to ' + S.esc(info.full_name) + '. Publishing works, you\'re all set.</span>';
         toast('Connected to GitHub');
-      } catch (e) { result.innerHTML = ''; append(result, h('span', { class: 'err-text' }, friendlyError(e))); }
+      } catch (e) {
+        result.innerHTML = '';
+        append(result, e.problem ? accessHelp(e.problem) : h('span', { class: 'err-text' }, friendlyError(e)));
+      }
     };
     const restoreIn = h('input', { type: 'file', accept: 'application/json,.json' });
     restoreIn.addEventListener('change', async () => {
@@ -1075,11 +1169,14 @@
           h('div', { class: 'f' }, h('span', { class: 'f-label' }, 'Repository name'), repo)),
         h('div', { class: 'f' }, h('span', { class: 'f-label' }, 'Access token'), token),
         h('details', { class: 'f' }, h('summary', { style: 'cursor:pointer;font-weight:600;color:var(--a)' }, 'How do I get a token?'),
+          h('p', { class: 'f-help', style: 'margin-top:10px', html: '<b>Quickest:</b> sign in to GitHub as <b>@' + S.esc(g.owner || 'the repository owner') + '</b> and tap the button. The right permission is already ticked: choose an expiry date after the wedding, press <b>Generate token</b> at the bottom, copy the token (it starts with ghp_) and paste it above. It can change all your public repositories, so keep it private.' }),
+          h('div', { class: 'btns', style: 'margin-top:8px' }, h('a', { class: 'btn ghost sm', href: classicTokenUrl(false), target: '_blank', rel: 'noopener' }, 'Make a token (1 click)')),
+          h('p', { class: 'f-help', style: 'margin-top:14px', html: '<b>Safest:</b> a token that works only for this one repository.' }),
           h('ol', { class: 'steps' },
             h('li', { html: 'Open <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a> (sign in if asked).' }),
             h('li', { html: '<b>Token name:</b> wedding editor. <b>Expiration:</b> pick a date after the wedding.' }),
-            h('li', { html: '<b>Repository access:</b> choose <i>Only select repositories</i> and pick <b>' + S.esc(g.repo || 'your invitation repository') + '</b>.' }),
-            h('li', { html: '<b>Permissions → Repository permissions → Contents:</b> set to <i>Read and write</i>.' }),
+            h('li', { html: '<b>Repository access:</b> choose <i>Only select repositories</i> and pick <b>' + S.esc(g.repo || 'your invitation repository') + '</b>. Not <i>Public repositories</i>: that one can only read.' }),
+            h('li', { html: '<b>Permissions:</b> find <b>Contents</b> (tap <i>Add permissions</i> if it isn\'t listed) and set it to <b>Read and write</b>. It starts as <i>Read-only</i>, which is not enough to publish.' }),
             h('li', { html: 'Press <b>Generate token</b>, copy it, and paste it in the box above.' })),
           h('p', { class: 'f-help' }, 'The token is saved only on this device. Never share it with anyone. If you lose your phone, delete the token on GitHub.')),
         h('details', { class: 'f' }, h('summary', { style: 'cursor:pointer;font-weight:600;color:var(--muted)' }, 'Advanced'),
@@ -1096,6 +1193,7 @@
           h('label', { class: 'btn ghost file-btn' }, 'Restore a backup', restoreIn),
           h('button', { type: 'button', class: 'btn danger', onclick: async () => { if (!confirm('Throw away all changes that are not published yet?')) return; LS.del('inv-draft'); st.pending = {}; await load(true); toast('Back to the published version'); } }, 'Undo unpublished changes')))
     ]);
+    if (checkNow && connected()) save();
   }
 
   /* ---------- load ---------- */
@@ -1105,6 +1203,7 @@
     c.settings.music = c.settings.music || { enabled: true, src: 'assets/music/canon-in-d-musicbox.mp3', volume: 0.6 };
     ['couple', 'intro', 'hero', 'labels', 'share', 'events', 'reveal', 'countdown', 'families', 'photo', 'venue', 'menu', 'dressCode', 'gifts', 'rsvp', 'closing', 'custom'].forEach((k) => { c[k] = c[k] || {}; });
     if (!Array.isArray(c.custom.items)) c.custom.items = [];
+    if (Array.isArray(c.dressCode.colors)) c.dressCode.colors = c.dressCode.colors.filter(Boolean).map((x) => (typeof x === 'object' ? x : newSwatch(x)));
     return c;
   }
   async function load(ignoreDraft) {

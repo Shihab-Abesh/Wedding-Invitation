@@ -161,27 +161,96 @@
   function renderHero() {
     const c = state.content, h = c.hero, cp = c.couple;
     const greet = guestName ? `<p class="greet" style="--d:.1s">${esc(t(c.intro.guestGreeting).replace('{name}', guestName))},</p>` : '';
+    const bismillah = h.bismillah !== false ? `<div class="bismillah" style="--d:0s">${S.SVG.bismillah()}</div>` : '';
     $('#heroInner').innerHTML = `
+      ${bismillah}
       ${greet}
       <p class="top-line" style="--d:.25s">${escBr(t(h.topLine))}</p>
       <h1 class="names" style="--d:.5s"><span class="n">${esc(t(cp.name1))}</span><span class="amp">${esc(t(cp.joiner) || '&')}</span><span class="n">${esc(t(cp.name2))}</span></h1>
       <p class="invite" style="--d:.85s">${escBr(t(h.invitation))}</p>
       <div class="scroll-hint" style="--d:1.6s">${esc(t(h.scrollHint))}</div>`;
-    fitNames();
   }
+
+  /* ---------- keep every text inside the screen ----------
+     Long names and words shrink until they fit their line, so nothing is cut off at the
+     screen edge. Only text that still doesn't fit at the smallest size breaks onto a new line. */
+  function shrinkToFit(el, min) {
+    el.style.overflowWrap = 'normal';
+    const avail = el.clientWidth;
+    let fs = parseFloat(getComputedStyle(el).fontSize);
+    for (let i = 0; i < 5 && avail && el.scrollWidth > avail + 1 && fs > min; i++) {
+      fs = Math.max(min, fs * (avail / el.scrollWidth) * 0.98);
+      el.style.fontSize = fs + 'px';
+    }
+    el.style.overflowWrap = '';
+  }
+  function fitWidth(el, min) { el.style.fontSize = ''; shrinkToFit(el, min); }
   function fitNames() {
+    $$('.names .amp').forEach((el) => { el.style.fontSize = ''; });
+    const b = $('.hero .bismillah');
+    if (b) b.style.width = '';
     $$('.names .n').forEach((el) => {
+      el.classList.remove('wrap');
       el.style.fontSize = '';
-      el.style.whiteSpace = 'nowrap';
-      const avail = el.parentElement.clientWidth;
-      if (el.scrollWidth > avail && avail > 0) {
-        const fs = parseFloat(getComputedStyle(el).fontSize);
-        const next = Math.max(30, fs * (avail / el.scrollWidth) * 0.97);
-        el.style.fontSize = next + 'px';
-        if (el.scrollWidth > avail) el.style.whiteSpace = 'normal';
+      const avail = el.clientWidth;
+      if (!avail || el.scrollWidth <= avail + 1) return;
+      const base = parseFloat(getComputedStyle(el).fontSize);
+      const oneLine = base * (avail / el.scrollWidth);
+      // a full name of several words goes onto two lines rather than becoming tiny
+      if (oneLine < base * 0.6 && /\s/.test(el.textContent.trim())) {
+        el.classList.add('wrap');
+        el.style.fontSize = Math.min(base * 0.8, oneLine * 1.9) + 'px';
       }
+      shrinkToFit(el, 22);
+      if (el.scrollWidth > el.clientWidth + 1) el.classList.add('wrap'); // last resort: break the word
     });
+    // both names at the same size, like on a printed card
+    const ns = $$('.names .n');
+    if (ns.some((el) => el.style.fontSize)) {
+      const size = Math.min(...ns.map((el) => parseFloat(getComputedStyle(el).fontSize)));
+      ns.forEach((el) => { el.style.fontSize = size + 'px'; });
+    }
   }
+  // the first screen has a fixed height, so shrink the names until everything fits on it
+  function fitHeroHeight() {
+    const inner = $('#heroInner');
+    const kids = $$('#heroInner > :not(.scroll-hint)');
+    if (!kids.length || !inner.clientHeight) return;
+    const cs = getComputedStyle(inner), padT = parseFloat(cs.paddingTop), boxB = inner.clientHeight - parseFloat(cs.paddingBottom);
+    // the content is centred, so its bottom half must also clear the "scroll" hint
+    const hint = $('#heroInner > .scroll-hint');
+    const avail = Math.min(boxB - padT, hint ? 2 * (hint.offsetTop - 10 - (padT + boxB) / 2) : Infinity);
+    const first = kids[0], last = kids[kids.length - 1];
+    const used = () => last.offsetTop + last.offsetHeight + parseFloat(getComputedStyle(last).marginBottom) - first.offsetTop + parseFloat(getComputedStyle(first).marginTop);
+    for (let i = 0; i < 5; i++) {
+      const u = used();
+      if (u <= avail) return;
+      const k = Math.max(0.6, avail / u);
+      $$('.names .n, .names .amp').forEach((el) => { el.style.fontSize = Math.max(18, parseFloat(getComputedStyle(el).fontSize) * k) + 'px'; });
+      const b = $('.hero .bismillah');
+      if (b) b.style.width = Math.max(100, b.offsetWidth * k) + 'px';
+    }
+  }
+  function fitSeal() {
+    const tx = $('#seal text');
+    if (!tx || !tx.getComputedTextLength) return;
+    tx.removeAttribute('textLength'); tx.removeAttribute('lengthAdjust');
+    if (tx.getComputedTextLength() > 62) { tx.setAttribute('textLength', '62'); tx.setAttribute('lengthAdjust', 'spacingAndGlyphs'); }
+  }
+  const FIT = [
+    ['#guestNote', 16], ['.hero .greet', 12], ['.hero .top-line', 9], ['.hero .invite', 9],
+    ['.script-title', 20], ['.fam-label', 14], ['.fam-name', 12], ['.event-name', 10], ['.event-venue', 12],
+    ['.venue-name', 12], ['.dress-heading', 10], ['.menu-course h4', 10], ['.signature', 16], ['.hashtag', 10],
+    ['.footer-note', 10], ['.swatch span', 10], ['.scratch .val', 10], ['.countdown-done', 16]
+  ];
+  function fitAll() {
+    if (!state.content) return;
+    fitNames();
+    FIT.forEach(([sel, min]) => $$(sel).forEach((el) => fitWidth(el, min)));
+    fitSeal();
+    fitHeroHeight();
+  }
+  const fitAllSoon = debounce(fitAll, 150);
 
   /* ---------- sections ---------- */
   const SECTIONS = {
@@ -286,12 +355,18 @@
       </section>`;
     },
     dressCode(c) {
-      const d = c.dressCode, cols = (d.colors || []).filter(Boolean);
+      const d = c.dressCode;
+      // each colour is { color, name: { en, bn } }; older files have plain "#hex" strings
+      const cols = (d.colors || []).map((x) => (x && typeof x === 'object' ? x : { color: x })).filter((x) => x.color);
+      const swatch = (x) => {
+        const name = String((x.name && x.name[state.lang]) || '').trim() || S.colorName(x.color)[state.lang];
+        return `<div class="swatch"><i style="background:${safeColor(x.color)}"></i><span>${esc(name)}</span></div>`;
+      };
       return `<section class="block" id="s-dress">
         <h2 class="script-title">${esc(t(d.title))}</h2>
         ${t(d.heading) ? `<p class="dress-heading">${esc(t(d.heading))}</p>` : ''}
         ${t(d.text) ? `<p class="lead">${escBr(t(d.text))}</p>` : ''}
-        ${cols.length ? `<div class="swatches">${cols.map((x) => `<i style="background:${safeColor(x)}"></i>`).join('')}</div><p class="swatch-label">${esc(t(d.colorsLabel))}</p>` : ''}
+        ${cols.length ? `${t(d.colorsLabel) ? `<p class="swatch-label">${esc(t(d.colorsLabel))}</p>` : ''}<div class="swatches">${cols.map(swatch).join('')}</div>` : ''}
       </section>`;
     },
     gifts(c) {
@@ -669,6 +744,7 @@
     renderMain();
     setupMusic();
     setupLang();
+    fitAll();
   }
 
   function normalise(c) {
@@ -687,8 +763,12 @@
     setupCurtains();
     renderAll();
     $('#openBtn').addEventListener('click', () => openCurtains(false));
-    window.addEventListener('resize', debounce(fitNames, 150));
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitNames);
+    window.addEventListener('resize', fitAllSoon);
+    if (document.fonts) {
+      if (document.fonts.ready) document.fonts.ready.then(fitAll);
+      // Bangla fonts load only when Bangla is first shown, and change every width
+      if (document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', fitAllSoon);
+    }
     if (PREVIEW) setTimeout(() => openCurtains(false), 700);
     if (params.has('open')) openCurtains(true);
   }
