@@ -3,17 +3,17 @@
     "defaultLanguage": "en",
     "showLanguageSwitch": true,
     "timezone": "+06:00",
-    "theme": "classic",
+    "theme": "blush",
     "colors": {
-      "curtain": "#b3141f",
-      "curtainLines": "#fdeee8",
-      "accent": "#7b1626",
-      "gold": "#c8a25c",
-      "background": "#fbf7f1",
-      "card": "#fffdf9",
-      "text": "#4f3b37",
-      "muted": "#8a7470",
-      "buttonText": "#fff8f0"
+      "curtain": "#d98c97",
+      "curtainLines": "#fff3f3",
+      "accent": "#a2475a",
+      "gold": "#d4af7a",
+      "background": "#fff8f6",
+      "card": "#fffdfc",
+      "text": "#5a3d42",
+      "muted": "#9a7a80",
+      "buttonText": "#fff7f5"
     },
     "music": {
       "enabled": true,
@@ -42,16 +42,16 @@
   },
   "couple": {
     "name1": {
-      "en": "Rafi",
-      "bn": "রাফি"
+      "en": "Israt Jesmine Anusha",
+      "bn": ""
     },
     "name2": {
-      "en": "Nabila",
-      "bn": "নাবিলা"
+      "en": "Jamilur Islam Biswas",
+      "bn": ""
     },
     "joiner": {
       "en": "&",
-      "bn": "ও"
+      "bn": ""
     },
     "monogram": {
       "en": "",
@@ -61,26 +61,25 @@
   "intro": {
     "tapHint": {
       "en": "Tap to open",
-      "bn": "খুলতে ট্যাপ করুন"
+      "bn": ""
     },
     "guestGreeting": {
-      "en": "Dear {name}",
-      "bn": "প্রিয় {name}"
+      "en": "",
+      "bn": ""
     },
     "youAreInvited": {
-      "en": "you are invited",
-      "bn": "আপনি আমন্ত্রিত"
+      "en": "",
+      "bn": ""
     }
   },
   "hero": {
-    "bismillah": true,
     "topLine": {
-      "en": "Together with their families",
-      "bn": "পরিবারের দোয়া ও আশীর্বাদে"
+      "en": "With the Blessings of Allah we are delighted to invite you to the akht ceremony of",
+      "bn": ""
     },
     "invitation": {
-      "en": "invite you to celebrate their wedding and the beginning of their forever",
-      "bn": "তাদের বিয়ের আনন্দঘন মুহূর্তে আপনাকে সাদর আমন্ত্রণ জানাচ্ছে"
+      "en": "",
+      "bn": ""
     },
     "scrollHint": {
       "en": "Scroll",
@@ -91,19 +90,19 @@
     "show": true,
     "title": {
       "en": "Save the Date",
-      "bn": "তারিখটি মনে রাখুন"
+      "bn": ""
     },
     "subtitle": {
       "en": "Scratch to discover the date",
-      "bn": "তারিখ জানতে ঘষে দেখুন"
+      "bn": ""
     },
     "after": {
       "en": "We're getting married!",
-      "bn": "আমরা বিয়ে করছি!"
+      "bn": ""
     },
     "revealAll": {
       "en": "or tap here to reveal",
-      "bn": "অথবা এখানে ট্যাপ করুন"
+      "bn": ""
     }
   },
   "countdown": {
@@ -140,11 +139,11 @@
       "bn": "পরিবারের দোয়া ও আশীর্বাদে"
     },
     "family1": {
-      "en": "son of\nMr. Abdur Rahman & Mrs. Salma Rahman",
+      "en": "Daughter of\nMustafa Amin Khan Mazlish (Azad) & Nurunnaher Begum (Jesmin)",
       "bn": "জনাব আব্দুর রহমান ও\nমিসেস সালমা রহমান-এর পুত্র"
     },
     "family2": {
-      "en": "daughter of\nMr. Kamal Hossain & Mrs. Ruma Hossain",
+      "en": "Only son of\nSaleh Uddin Biswas & Farjana Begum",
       "bn": "জনাব কামাল হোসেন ও\nমিসেস রুমা হোসেন-এর কন্যা"
     }
   },
@@ -164,79 +163,35 @@
     "show": true,
     "eyebrow": {
       "en": "Join us for",
-      "bn": "আমাদের আয়োজন"
+      "bn": ""
     },
     "title": {
       "en": "The Celebrations",
-      "bn": "অনুষ্ঠানসূচি"
+      "bn": ""
     },
     "showIllustration": true,
     "items": [
       {
         "main": false,
         "name": {
-          "en": "Gaye Holud",
-          "bn": "গায়ে হলুদ"
+          "en": "Akht",
+          "bn": ""
         },
-        "date": "2026-12-17",
-        "time": "16:00",
+        "date": "2026-10-15",
+        "time": "",
         "venue": {
-          "en": "Rooftop Garden, Dhanmondi",
-          "bn": "রুফটপ গার্ডেন, ধানমন্ডি"
+          "en": "Amber Glass House",
+          "bn": ""
         },
         "address": {
-          "en": "House 12, Road 5, Dhanmondi, Dhaka",
-          "bn": "বাড়ি ১২, রোড ৫, ধানমন্ডি, ঢাকা"
-        },
-        "note": {
-          "en": "Wear yellow or green",
-          "bn": "হলুদ বা সবুজ পোশাকে আসুন"
-        },
-        "mapLink": ""
-      },
-      {
-        "main": true,
-        "name": {
-          "en": "Wedding Ceremony",
-          "bn": "বিয়ের অনুষ্ঠান"
-        },
-        "date": "2026-12-18",
-        "time": "19:00",
-        "venue": {
-          "en": "The Grand Ballroom, Gulshan",
-          "bn": "দ্য গ্র্যান্ড বলরুম, গুলশান"
-        },
-        "address": {
-          "en": "Road 90, Gulshan 2, Dhaka",
-          "bn": "রোড ৯০, গুলশান ২, ঢাকা"
+          "en": "Banani Club, Dhaka",
+          "bn": ""
         },
         "note": {
           "en": "",
           "bn": ""
         },
-        "mapLink": ""
-      },
-      {
-        "main": false,
-        "name": {
-          "en": "Reception (Bou Bhat)",
-          "bn": "বৌভাত"
-        },
-        "date": "2026-12-19",
-        "time": "19:30",
-        "venue": {
-          "en": "Lakeshore Hall, Banani",
-          "bn": "লেকশোর হল, বনানী"
-        },
-        "address": {
-          "en": "Road 11, Banani, Dhaka",
-          "bn": "রোড ১১, বনানী, ঢাকা"
-        },
-        "note": {
-          "en": "",
-          "bn": ""
-        },
-        "mapLink": ""
+        "mapLink": "https://maps.app.goo.gl/PH9XgxPUouWW5tq46"
       }
     ]
   },
@@ -244,25 +199,25 @@
     "show": true,
     "title": {
       "en": "Location",
-      "bn": "স্থান"
+      "bn": ""
     },
     "name": {
-      "en": "The Grand Ballroom",
-      "bn": "দ্য গ্র্যান্ড বলরুম"
+      "en": "Amber Glass House, Banani Club",
+      "bn": ""
     },
     "address": {
-      "en": "Road 90, Gulshan 2, Dhaka",
-      "bn": "রোড ৯০, গুলশান ২, ঢাকা"
+      "en": "103, 105 & 109, Road 1 Block F, Dhaka 1213",
+      "bn": ""
     },
-    "mapSearch": "Gulshan 2, Dhaka",
-    "mapLink": "",
+    "mapSearch": "Banani Club",
+    "mapLink": "https://maps.app.goo.gl/PH9XgxPUouWW5tq46",
     "button": {
       "en": "Open in Google Maps",
-      "bn": "গুগল ম্যাপে খুলুন"
+      "bn": ""
     }
   },
   "menu": {
-    "show": true,
+    "show": false,
     "eyebrow": {
       "en": "The wedding feast",
       "bn": "বিয়ের ভোজ"
@@ -318,47 +273,40 @@
     "show": true,
     "title": {
       "en": "Dress Code",
-      "bn": "পোশাক"
+      "bn": ""
     },
     "heading": {
       "en": "Traditional Elegance",
-      "bn": "ঐতিহ্যবাহী সাজ"
+      "bn": ""
     },
     "text": {
-      "en": "Ladies in saree or lehenga, gentlemen in panjabi or sherwani. Shades of red, gold and ivory are most welcome.",
-      "bn": "নারীরা শাড়ি বা লেহেঙ্গা, পুরুষেরা পাঞ্জাবি বা শেরওয়ানি। লাল, সোনালি ও আইভরি রঙ হলে খুব ভালো হয়।"
+      "en": "",
+      "bn": ""
     },
     "colorsLabel": {
       "en": "Suggested colours",
-      "bn": "পছন্দের রং"
+      "bn": ""
     },
     "colors": [
       {
-        "color": "#8e1b24",
+        "color": "#fffdd0",
         "name": {
-          "en": "Maroon",
-          "bn": "মেরুন"
+          "en": "Cream",
+          "bn": "হালকা হলুদ"
         }
       },
       {
-        "color": "#b8323a",
+        "color": "#ffffff",
         "name": {
-          "en": "Red",
-          "bn": "লাল"
+          "en": "White",
+          "bn": "সাদা"
         }
       },
       {
-        "color": "#c8a25c",
-        "name": {
-          "en": "Gold",
-          "bn": "সোনালি"
-        }
-      },
-      {
-        "color": "#efe2cc",
+        "color": "#fffff0",
         "name": {
           "en": "Ivory",
-          "bn": "আইভরি"
+          "bn": "সাদা"
         }
       }
     ]
@@ -453,7 +401,7 @@
     "items": []
   },
   "closing": {
-    "show": true,
+    "show": false,
     "title": {
       "en": "See you there",
       "bn": "দেখা হবে"
